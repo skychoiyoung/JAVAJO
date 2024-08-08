@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+ 
+<mapper namespace="com.javajo.project.dto.hostMapper">   
+										
+	<insert id = "insertHouse" parameterType ="houseDTO"> 
+	     insert into javajo_house values(seq_house_num.nextval, #{user_id},
+		 #{house_name}, #{house_addr}, #{house_room}, #{house_bed}, #{house_bath}, #{house_maxperson},
+		 #{house_image1}, #{house_image2}, #{house_image3}, #{house_image4}, #{house_image5}, 
+		 #{house_type}, #{house_theme}, #{house_fac}, #{house_content}, #{house_price}, #{house_checkin}, #{house_checkout})
+	</insert>
+						
+	<delete id = "deleteHouse" parameterType = "int">
+		delete from javajo_house where house_num = #{house_num}				
+	</delete>
+	
+	<update id = "updateHouse" parameterType = "houseDTO">
+		update javajo_house <set> house_name = #{house_name}, house_room= #{house_room}, house_bed= #{house_bed}, 
+		house_bath= #{house_bath}, house_maxperson= #{house_maxperson}, 
+		<if test="house_image1 != null">house_image1 = #{house_image1},</if>
+        <if test="house_image2 != null">house_image2 = #{house_image2},</if>
+        <if test="house_image3 != null">house_image3 = #{house_image3},</if>
+        <if test="house_image4 != null">house_image4 = #{house_image4},</if>
+        <if test="house_image5 != null">house_image5 = #{house_image5},</if> 
+		house_theme= #{house_theme}, house_fac= #{house_fac},
+		house_content= #{house_content}, house_price= #{house_price}, house_checkin = #{house_checkin}, 
+		house_checkout = #{house_checkout} </set>
+		where house_num= #{house_num}
+	</update>
+	
+	<!-- insert 숙소명 중복체크 -->
+	<select id="findQnaNum" parameterType = "java.util.Map" resultType = "Integer">
+	 	select hostqna_num from javajo_hostqna 
+		where  hostqna_gcontent = #{hostqna_gcontent} and user_id = #{user_id}
+		and house_num = #{house_num}	  
+	</select>
+	
+	<!-- 이미지리스트 가져오기-->
+	<select id="imageList" parameterType = "int" resultType = "houseDTO">
+	 	select * from javajo_house where  house_num = #{house_num}
+	</select>
+	
+	<!-- 체크인/체크아웃 가져오기-->
+	<select id="getCheckinOut" parameterType = "int" resultType = "houseDTO">
+	 	select house_checkin, house_checkout from javajo_house where house_num = #{house_num}
+	</select>	
+	
+	<!-- 숙소문의 답변 -->
+	<update id ="hostQnaAnswer" parameterType = "java.util.Map">
+		update javajo_hostqna set hostqna_hcontent= #{hostqna_hcontent}, hostqna_status = '답변완료'
+		where hostqna_num= #{hostqna_num}
+	</update>
+	
+	<!-- 숙소문의 답변 삭제 -->
+	<update id ="hostQnaAnswerDelete" parameterType = "Integer">
+		update javajo_hostqna set hostqna_hcontent= '', hostqna_status = '답변대기'
+		where hostqna_num= #{hostqna_num}
+	</update>
+	
+	<!-- insert에서 숙소명 중복체크 위해 -->
+	<select id="checkHousename" resultType = "houseDTO"> 
+		select house_name from javajo_house    
+	</select>
+	
+	<!-- 정산 관리  -->
+	<select id="paylistHouse1" parameterType = "String" resultType = "reservDTO"> 
+		select jr.reserv_date, jr.house_name, jr.reserv_checkin, jr.reserv_checkout, jr.reserv_paytype, jr.reserv_pay 
+		from javajo_reserv jr join javajo_house jh on jr.house_num = jh.house_num
+		where jh.user_id = #{user_id} order by jr.reserv_checkout desc   
+	</select>
+	
+	<!-- 정산 관리 검색 시 실행 -->
+	<select id="paylistHouse2" parameterType = "java.util.Map" resultType = "reservDTO"> 
+		select jr.reserv_date, jr.house_name, jr.reserv_checkin, jr.reserv_checkout, jr.reserv_paytype, jr.reserv_pay 
+		from javajo_reserv jr join javajo_house jh on jr.house_num = jh.house_num
+		where jh.user_id = #{user_id} and jr.reserv_checkout between to_date(#{firstDay}, 'YYYY-MM-DD') 
+		and to_date(#{lastDay}, 'YYYY-MM-DD') order by jr.reserv_checkout desc   
+	</select>
+	
+	<!-- 숙소 관리 -->
+	<select id="listHouseById" parameterType = "String" resultType = "houseDTO"> 
+		select * from javajo_house where user_id = #{user_id} 
+	</select>
+	
+	<!-- 숙소 상세정보 -->
+	<select id="infoHouse"  parameterType = "int" resultType = "houseDTO"> 
+		select * from javajo_house where house_num = #{house_num}
+	</select>
+	
+	<!-- 숙소 예약관리-숙소명 sort1값 -->
+	<select id="sort1" parameterType = "int" resultType = "String"> 
+		select house_name from javajo_house where house_num = #{house_num}
+	</select>
+			
+	<!-- 호스트 예약된 숙소리스트-->	
+	<!-- 상태 업데이트[결제완료] -->
+	<update id="beforeCheckin">
+		update javajo_reserv set reserv_status = '결제완료'
+		where sysdate &lt; reserv_checkin and reserv_status != '예약취소' 
+	</update>
+	
+	<!-- 상태 업데이트[이용중] -->
+	<update id="nowCheckin">
+		update javajo_reserv set reserv_status = '이용중'
+		where reserv_checkin &lt; sysdate and sysdate &lt; reserv_checkout and reserv_status != '예약취소'
+	</update>
+	
+	<!-- 상태 업데이트[이용완료] -->
+	<update id="afterCheckout">
+		update javajo_reserv set reserv_status = '이용완료'
+		where  reserv_checkout &lt; sysdate and reserv_status != '예약취소' and reserv_status != '리뷰완료'
+	</update>
+			
+	<!-- 예약 페이징 처리 all-->
+	<select id="reservAll" parameterType="java.util.Map" resultType="reservDTO">
+		select * from (
+		    select rownum rn, A.*
+		    from (
+		        select jr.*
+		        from javajo_reserv jr
+		        join javajo_house jh on jr.house_num = jh.house_num
+		        where jh.user_id = #{user_id}
+		        order by jr.reserv_date desc
+		    ) A
+		)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 예약 페이징 처리2 [집 전체, 상태 선택]-->
+	<select id="hAllsChoice" parameterType="java.util.Map" resultType="reservDTO">	 	
+		select * from (
+		    select rownum rn, A.*
+		    from (
+		        select jr.*
+		        from javajo_reserv jr
+		        join javajo_house jh on jr.house_num = jh.house_num
+		        where jr.reserv_status = #{reserv_status} and jh.user_id = #{user_id}
+		        order by jr.reserv_checkin desc
+		    ) A
+		)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 예약 페이징 처리3 [집 선택, 상태 전체]-->
+	<select id="hChoicesAll" parameterType="java.util.Map" resultType="reservDTO">
+		select * from (
+		    select rownum rn, A.*
+		    from (
+		        select jr.*
+		        from javajo_reserv jr
+		        join javajo_house jh on jr.house_num = jh.house_num
+		        where jr.house_name = #{house_name} and jh.user_id = #{user_id}
+		        order by jr.reserv_date desc
+		    ) A
+		)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 예약 페이징 처리4 [집 선택, 상태 선택]-->
+	<select id="hChoicesChoice" parameterType="java.util.Map" resultType="reservDTO">
+		select * from (
+		    select rownum rn, A.*
+		    from (
+		        select jr.*
+		        from javajo_reserv jr
+		        join javajo_house jh on jr.house_num = jh.house_num
+		        where jr.house_name = #{house_name} and jr.reserv_status = #{reserv_status} and jh.user_id = #{user_id}
+		        order by jr.reserv_date desc
+		    ) A
+		)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	 
+	<!-- 정산 페이징 처리 (초기화면) --> 
+	<select id="paymentList1" parameterType="java.util.Map" resultType="reservDTO">
+		select * from (
+		    select rownum rn, A.*
+		    from (
+		        select jr.*
+		        from javajo_reserv jr
+		        join javajo_house jh on jr.house_num = jh.house_num
+		        where jh.user_id = #{user_id} and jr.reserv_checkout &lt; sysdate
+		        order by jr.reserv_checkout desc 
+		    ) A
+		)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 정산 페이징 처리 (검색했을때) --> 
+	<select id="paymentList2" parameterType="java.util.Map" resultType="reservDTO">
+		select * from (
+		    select rownum rn, A.*
+		    from (
+		        select jr.*
+		        from javajo_reserv jr
+		        join javajo_house jh on jr.house_num = jh.house_num
+		        where jh.user_id = #{user_id} and jr.reserv_checkout &lt; sysdate
+			        and jr.reserv_date between to_date(#{firstDay}, 'YYYY-MM-DD') 
+					and to_date(#{lastDay}, 'YYYY-MM-DD')
+		        order by jr.reserv_checkout desc 
+		    ) A
+		)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<select id="totPrice1" parameterType="String" resultType="reservDTO">
+        SELECT jr.*
+		FROM javajo_reserv jr
+		JOIN javajo_house jh ON jr.house_num = jh.house_num
+		WHERE jh.user_id = #{user_id}
+		AND jr.RESERV_CHECKOUT &lt; sysdate
+	</select>
+	
+	<select id="totPrice2" parameterType="java.util.Map" resultType="reservDTO">
+        select jr.* from javajo_reserv jr join javajo_house jh on jr.house_num = jh.house_num
+		where jh.user_id = #{user_id} and jr.reserv_checkout &lt; sysdate
+		and jr.reserv_date between to_date(#{firstDay}, 'YYYY-MM-DD') 
+		and to_date(#{lastDay}, 'YYYY-MM-DD')
+	</select>	
+			
+	<!-- 예약 리스트 수1-->	
+	<select id="getHostReservCount1" parameterType="String" resultType="Integer">
+		select count(*) from javajo_reserv jr join javajo_house jh on jr.house_num = jh.house_num		
+		where jh.user_id = #{user_id} 
+	</select>
+	
+	<!-- 예약 리스트 수2-->	
+	<select id="getHostReservCount2" parameterType="java.util.Map" resultType="Integer">
+		select count(*) from javajo_reserv jr join javajo_house jh on jr.house_num = jh.house_num		
+		where jr.reserv_status = #{reserv_status} and jh.user_id = #{user_id}
+	</select>	
+	
+	<!-- 예약 리스트 수3-->	
+	<select id="getHostReservCount3" parameterType="java.util.Map" resultType="Integer">
+		select count(*) from javajo_reserv jr join javajo_house jh on jr.house_num = jh.house_num		
+		where jr.house_name = #{house_name} and jh.user_id = #{user_id}
+	</select>	
+	
+	<!-- 예약 리스트 수4-->	
+	<select id="getHostReservCount4" parameterType="java.util.Map" resultType="Integer">
+		select count(*) from javajo_reserv jr join javajo_house jh on jr.house_num = jh.house_num		
+		where jr.house_name = #{house_name} and jr.reserv_status = #{reserv_status} and jh.user_id = #{user_id}
+	</select>		
+			  
+	<!-- 정산 리스트 수-->	
+	<select id="getHostPaymanageCount1" parameterType="String" resultType="Integer">
+		select count(*) from javajo_reserv jr join javajo_house jh on jr.house_num = jh.house_num		
+		where jh.user_id = #{user_id} and jr.reserv_checkout &lt; sysdate
+	</select>
+	
+	<select id="getHostPaymanageCount2" parameterType="java.util.Map" resultType="Integer">
+		select count(*) from javajo_reserv jr join javajo_house jh on jr.house_num = jh.house_num		
+		where jh.user_id = #{user_id} and jr.reserv_date between to_date(#{firstDay}, 'YYYY-MM-DD') 
+		and to_date(#{lastDay}, 'YYYY-MM-DD') and jr.reserv_checkout &lt; sysdate
+	</select>	
+	
+	<select id="houseType" parameterType="String" resultType = "String"> 
+		select htype_des from house_type where htype = #{htype} 
+	</select> 
+			
+	<!-- 숙소 입력(건물유형) -->	
+	<select id="listHouseType" resultType = "typeDTO"> 
+		select * from house_type
+	</select>
+	
+	<!-- 숙소 입력(건물테마) -->	
+	<select id="listHouseTheme" resultType = "themeDTO"> 
+		select * from house_theme
+	</select>
+
+	<!-- 숙소 입력(건물편의) -->	
+	<select id="listHouseFac" resultType = "facDTO"> 
+		select * from house_fac
+	</select>
+	
+	<!-- 숙소 상세정보 체크박스 가져오기 -->	
+	<select id="checkedTheme" parameterType="int" resultType = "String"> 
+		select house_theme from javajo_house where house_num = #{house_num} 
+	</select>
+	
+	<select id="checkedFac" parameterType="int" resultType = "String"> 
+		select house_fac from javajo_house where house_num = #{house_num} 
+	</select>
+	
+	<select id="getThemeNames" parameterType="list" resultType="String">
+	    select htheme_des from house_theme where htheme in 
+	    <foreach item="code" index="index" collection="list" open="(" separator="," close=")">
+	        #{code}
+	    </foreach>
+	</select>
+	
+	<select id="getFacNames" parameterType="list" resultType="String">
+	    select hfac_des from house_fac where hfac in
+	    <foreach item="code" index="index" collection="list" open="(" separator="," close=")">
+	        #{code}
+	    </foreach>
+	</select>
+	
+	<select id="getDates" parameterType="int" resultType = "reservDTO"> 
+      select * from javajo_reserv where house_num = #{house_num} 
+      and sysdate &lt; RESERV_CHECKIN
+      and reserv_status != '예약취소'
+   </select>
+</mapper>

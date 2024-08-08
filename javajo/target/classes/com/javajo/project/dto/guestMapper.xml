@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.javajo.project.dto.guestMapper">
+
+	<!-- 메인 - 테마 아이콘 -->
+	<select id="listTheme" resultType="ThemeDTO"> 
+		select * from house_theme order by htheme asc
+	</select>
+	
+	<!-- 메인 - 전체 숙소리스트 -->
+	<select id="listHouse" parameterType="String" resultType="houseDTO">
+		SELECT h.*, AVG(r.review_score) AS avg_score 
+	    FROM javajo_house h
+	    LEFT JOIN javajo_review r ON h.house_num = r.house_num
+	    GROUP BY h.house_num, h.user_id, h.house_name, h.house_addr, h.house_room, h.house_bed, h.house_bath,
+	             h.house_maxperson, h.house_image1, h.house_image2, h.house_image3, h.house_image4, h.house_image5,
+	             h.house_type, h.house_theme, h.house_fac, h.house_content, h.house_price, h.house_checkin, h.house_checkout
+	    <choose>
+	        <when test="_parameter == 'score'">
+	            ORDER BY avg_score DESC NULLS LAST
+	        </when>
+	        <when test="_parameter == 'price'">
+	            ORDER BY h.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY h.house_num DESC
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 메인 - 테마별 숙소리스트 -->
+	<select id="listHousebyTheme" parameterType="java.util.Map" resultType="houseDTO">
+	    SELECT h.*, AVG(r.review_score) AS avg_score 
+	    FROM javajo_house h
+	    LEFT JOIN javajo_review r ON h.house_num = r.house_num
+	    WHERE h.house_theme LIKE '%' || #{theme} || '%'
+	    GROUP BY h.house_num, h.user_id, h.house_name, h.house_addr, h.house_room, h.house_bed, h.house_bath,
+	             h.house_maxperson, h.house_image1, h.house_image2, h.house_image3, h.house_image4, h.house_image5,
+	             h.house_type, h.house_theme, h.house_fac, h.house_content, h.house_price, h.house_checkin, h.house_checkout
+	    <choose>
+	        <when test="sort == 'score'">
+	            ORDER BY avg_score DESC NULLS LAST
+	        </when>
+	        <when test="sort == 'price'">
+	            ORDER BY h.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY h.house_num DESC
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 메인 - 게스트선호 리스트 -->
+	<select id="guestPrefer" resultType="houseDTO">
+      select h.house_num, h.house_name, h.house_price, h.house_image1, count(w.house_num)
+      from javajo_house h
+      left join javajo_wishlist w 
+      on w.house_num = h.house_num
+      group by h.house_num, h.house_name, h.house_price, h.house_image1
+      having count(w.house_num) &gt;= 5
+   </select>
+	
+	<!-- 주택유형 선택안한 경우 -->
+	<!-- 메인 - 검색조건1 : 인원만 값이 있는 경우 검색된 숙소리스트 -->
+	<select id="getAvailableHouse1" parameterType="java.util.Map" resultType="houseDTO">
+	    SELECT javajo_house.*, AVG(javajo_review.review_score) AS average_score
+	    FROM javajo_house
+	    LEFT JOIN javajo_review 
+	    ON javajo_house.house_num = javajo_review.house_num 
+	    WHERE javajo_house.house_maxperson &gt;= #{per_count} 
+	    		AND javajo_house.house_room &gt;= #{room_cnt} 
+	    		AND javajo_house.house_bath &gt;= #{bath_cnt} 
+	    		AND javajo_house.house_bed &gt;= #{bed_cnt} 
+	    GROUP BY javajo_house.house_num, javajo_house.user_id, javajo_house.house_name, javajo_house.house_addr, 
+	             javajo_house.house_room, javajo_house.house_bed, javajo_house.house_bath, javajo_house.house_maxperson, 
+	             javajo_house.house_image1, javajo_house.house_image2, javajo_house.house_image3, javajo_house.house_image4, 
+	             javajo_house.house_image5, javajo_house.house_type, javajo_house.house_theme, javajo_house.house_fac, 
+	             javajo_house.house_content, javajo_house.house_price, javajo_house.house_checkin, javajo_house.house_checkout
+	    <choose>
+	        <when test="sort == 'num'">
+	        	ORDER BY javajo_house.house_num DESC           
+	        </when>
+	        <when test="sort == 'price'">
+	            ORDER BY javajo_house.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY average_score DESC nulls last
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 메인 - 검색조건2 : 기간과 인원만 값이 있는 경우 검색된 숙소리스트 -->
+	<select id="getAvailableHouse2" parameterType="java.util.Map" resultType="houseDTO">
+	    SELECT javajo_house.*, AVG(javajo_review.review_score) AS average_score
+	    FROM javajo_house
+	    LEFT JOIN javajo_review ON javajo_house.house_num = javajo_review.house_num
+	    WHERE 1=1
+	        AND NOT EXISTS (
+	            SELECT 1
+	            FROM javajo_reserv
+	            WHERE
+	                javajo_house.house_num = javajo_reserv.house_num AND
+	                (TO_DATE(#{checkin}, 'YYYY-MM-DD') BETWEEN javajo_reserv.reserv_checkin AND javajo_reserv.reserv_checkout OR
+	                TO_DATE(#{checkout}, 'YYYY-MM-DD') BETWEEN javajo_reserv.reserv_checkin AND javajo_reserv.reserv_checkout)
+	        )
+	        AND #{per_count} &lt;= javajo_house.house_maxperson and #{room_cnt} &lt;= javajo_house.house_room 
+	    	and #{bath_cnt} &lt;= javajo_house.house_bath and #{bed_cnt} &lt;= javajo_house.house_bed 
+	    GROUP BY javajo_house.house_num, javajo_house.user_id, javajo_house.house_name, javajo_house.house_addr, 
+	             javajo_house.house_room, javajo_house.house_bed, javajo_house.house_bath, javajo_house.house_maxperson, 
+	             javajo_house.house_image1, javajo_house.house_image2, javajo_house.house_image3, javajo_house.house_image4, 
+	             javajo_house.house_image5, javajo_house.house_type, javajo_house.house_theme, javajo_house.house_fac, 
+	             javajo_house.house_content, javajo_house.house_price, javajo_house.house_checkin, javajo_house.house_checkout
+	    <choose>
+	        <when test="sort == 'num'">
+	        	ORDER BY javajo_house.house_num DESC            
+	        </when>
+	        <when test="sort == 'price'">
+	            ORDER BY javajo_house.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY average_score DESC NULLS LAST
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 메인 - 검색조건3 : 지역과 인원만 값이 있는 경우 검색된 숙소리스트 -->
+	<select id="getAvailableHouse3" parameterType="java.util.Map" resultType="houseDTO">
+	    SELECT javajo_house.*, AVG(javajo_review.review_score) AS average_score
+	    FROM javajo_house
+	    LEFT JOIN javajo_review ON javajo_house.house_num = javajo_review.house_num
+	    WHERE #{per_count} &lt;= javajo_house.house_maxperson
+	        	AND javajo_house.house_addr LIKE CONCAT(#{area}, '%')
+	        	and #{room_cnt} &lt;= javajo_house.house_room 
+	    		and #{bath_cnt} &lt;= javajo_house.house_bath and #{bed_cnt} &lt;= javajo_house.house_bed 
+	    GROUP BY javajo_house.house_num, javajo_house.user_id, javajo_house.house_name, javajo_house.house_addr, 
+	             javajo_house.house_room, javajo_house.house_bed, javajo_house.house_bath, javajo_house.house_maxperson, 
+	             javajo_house.house_image1, javajo_house.house_image2, javajo_house.house_image3, javajo_house.house_image4, 
+	             javajo_house.house_image5, javajo_house.house_type, javajo_house.house_theme, javajo_house.house_fac, 
+	             javajo_house.house_content, javajo_house.house_price, javajo_house.house_checkin, javajo_house.house_checkout
+	    <choose>
+	        <when test="sort == 'num'">
+	        	ORDER BY javajo_house.house_num DESC           
+	        </when>
+	        <when test="sort == 'price'">
+	            ORDER BY javajo_house.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY average_score DESC NULLS LAST
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 메인 - 검색조건 : 검색값이 모두 있는 경우 검색된 숙소리스트 -->
+	<select id="getAvailableHouse4" parameterType="java.util.Map" resultType="houseDTO">
+	    SELECT javajo_house.*, AVG(javajo_review.review_score) AS average_score
+	    FROM javajo_house
+	    LEFT JOIN javajo_review ON javajo_house.house_num = javajo_review.house_num
+	    WHERE 1=1
+	        AND NOT EXISTS (
+	            SELECT 1
+	            FROM javajo_reserv
+	            WHERE
+	                javajo_house.house_num = javajo_reserv.house_num AND
+	                (TO_DATE(#{checkin}, 'YYYY-MM-DD') BETWEEN javajo_reserv.reserv_checkin AND javajo_reserv.reserv_checkout OR
+	                TO_DATE(#{checkout}, 'YYYY-MM-DD') BETWEEN javajo_reserv.reserv_checkin AND javajo_reserv.reserv_checkout)
+	        )
+	        AND #{per_count} &lt;= javajo_house.house_maxperson
+	        AND javajo_house.house_addr LIKE CONCAT(#{area}, '%')
+	        and #{room_cnt} &lt;= javajo_house.house_room 
+	    	and #{bath_cnt} &lt;= javajo_house.house_bath and #{bed_cnt} &lt;= javajo_house.house_bed 
+	    GROUP BY javajo_house.house_num, javajo_house.user_id, javajo_house.house_name, javajo_house.house_addr, 
+	             javajo_house.house_room, javajo_house.house_bed, javajo_house.house_bath, javajo_house.house_maxperson, 
+	             javajo_house.house_image1, javajo_house.house_image2, javajo_house.house_image3, javajo_house.house_image4, 
+	             javajo_house.house_image5, javajo_house.house_type, javajo_house.house_theme, javajo_house.house_fac, 
+	             javajo_house.house_content, javajo_house.house_price, javajo_house.house_checkin, javajo_house.house_checkout
+	    <choose>
+	        <when test="sort == 'num'">
+	        	ORDER BY javajo_house.house_num DESC           
+	        </when>
+	        <when test="sort == 'price'">
+	            ORDER BY javajo_house.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY average_score DESC NULLS LAST
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	
+	<!-- 주택유형 선택한 경우 -->
+	<!-- 메인 - 검색조건5 : 인원만 값이 있는 경우 검색된 숙소리스트 -->
+	<select id="getAvailableHouse5" parameterType="java.util.Map" resultType="houseDTO">
+	    SELECT javajo_house.*, AVG(javajo_review.review_score) AS average_score
+	    FROM javajo_house
+	    LEFT JOIN javajo_review ON javajo_house.house_num = javajo_review.house_num 
+	    WHERE #{per_count} &lt;= javajo_house.house_maxperson and #{room_cnt} &lt;= javajo_house.house_room 
+	    		and #{bath_cnt} &lt;= javajo_house.house_bath and #{bed_cnt} &lt;= javajo_house.house_bed
+	    		and javajo_house.house_type = #{build_type}
+	    GROUP BY javajo_house.house_num, javajo_house.user_id, javajo_house.house_name, javajo_house.house_addr, 
+	             javajo_house.house_room, javajo_house.house_bed, javajo_house.house_bath, javajo_house.house_maxperson, 
+	             javajo_house.house_image1, javajo_house.house_image2, javajo_house.house_image3, javajo_house.house_image4, 
+	             javajo_house.house_image5, javajo_house.house_type, javajo_house.house_theme, javajo_house.house_fac, 
+	             javajo_house.house_content, javajo_house.house_price, javajo_house.house_checkin, javajo_house.house_checkout
+	    <choose>
+	        <when test="sort == 'num'">
+	        	ORDER BY javajo_house.house_num DESC NULLS LAST	            
+	        </when>
+	        <when test="sort == 'price'">
+	            ORDER BY javajo_house.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY average_score DESC
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 메인 - 검색조건6 : 기간과 인원만 값이 있는 경우 검색된 숙소리스트 -->
+	<select id="getAvailableHouse6" parameterType="java.util.Map" resultType="houseDTO">
+	    SELECT javajo_house.*, AVG(javajo_review.review_score) AS average_score
+	    FROM javajo_house
+	    LEFT JOIN javajo_review ON javajo_house.house_num = javajo_review.house_num
+	    WHERE 1=1
+	        AND NOT EXISTS (
+	            SELECT 1
+	            FROM javajo_reserv
+	            WHERE
+	                javajo_house.house_num = javajo_reserv.house_num AND
+	                (TO_DATE(#{checkin}, 'YYYY-MM-DD') BETWEEN javajo_reserv.reserv_checkin AND javajo_reserv.reserv_checkout OR
+	                TO_DATE(#{checkout}, 'YYYY-MM-DD') BETWEEN javajo_reserv.reserv_checkin AND javajo_reserv.reserv_checkout)
+	        )
+	        AND #{per_count} &lt;= javajo_house.house_maxperson and #{room_cnt} &lt;= javajo_house.house_room 
+	    	and #{bath_cnt} &lt;= javajo_house.house_bath and #{bed_cnt} &lt;= javajo_house.house_bed
+	    	and javajo_house.house_type = #{build_type}
+	    GROUP BY javajo_house.house_num, javajo_house.user_id, javajo_house.house_name, javajo_house.house_addr, 
+	             javajo_house.house_room, javajo_house.house_bed, javajo_house.house_bath, javajo_house.house_maxperson, 
+	             javajo_house.house_image1, javajo_house.house_image2, javajo_house.house_image3, javajo_house.house_image4, 
+	             javajo_house.house_image5, javajo_house.house_type, javajo_house.house_theme, javajo_house.house_fac, 
+	             javajo_house.house_content, javajo_house.house_price, javajo_house.house_checkin, javajo_house.house_checkout
+	    <choose>
+	        <when test="sort == 'num'">
+	        	ORDER BY javajo_house.house_num DESC            
+	        </when>
+	        <when test="sort == 'price'">
+	            ORDER BY javajo_house.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY average_score DESC NULLS LAST
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 메인 - 검색조건7 : 지역과 인원만 값이 있는 경우 검색된 숙소리스트 -->
+	<select id="getAvailableHouse7" parameterType="java.util.Map" resultType="houseDTO">
+	    SELECT javajo_house.*, AVG(javajo_review.review_score) AS average_score
+	    FROM javajo_house
+	    LEFT JOIN javajo_review ON javajo_house.house_num = javajo_review.house_num
+	    WHERE #{per_count} &lt;= javajo_house.house_maxperson
+	        	AND javajo_house.house_addr LIKE CONCAT(#{area}, '%')
+	        	and #{room_cnt} &lt;= javajo_house.house_room 
+	    		and #{bath_cnt} &lt;= javajo_house.house_bath and #{bed_cnt} &lt;= javajo_house.house_bed 
+	    		and javajo_house.house_type = #{build_type}
+	    GROUP BY javajo_house.house_num, javajo_house.user_id, javajo_house.house_name, javajo_house.house_addr, 
+	             javajo_house.house_room, javajo_house.house_bed, javajo_house.house_bath, javajo_house.house_maxperson, 
+	             javajo_house.house_image1, javajo_house.house_image2, javajo_house.house_image3, javajo_house.house_image4, 
+	             javajo_house.house_image5, javajo_house.house_type, javajo_house.house_theme, javajo_house.house_fac, 
+	             javajo_house.house_content, javajo_house.house_price, javajo_house.house_checkin, javajo_house.house_checkout
+	    <choose>
+	        <when test="sort == 'num'">
+	        	ORDER BY javajo_house.house_num DESC           
+	        </when>
+	        <when test="sort == 'price'">
+	            ORDER BY javajo_house.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY average_score DESC NULLS LAST
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 메인 - 검색조건8 : 검색값이 모두 있는 경우 검색된 숙소리스트 -->
+	<select id="getAvailableHouse8" parameterType="java.util.Map" resultType="houseDTO">
+	    SELECT javajo_house.*, AVG(javajo_review.review_score) AS average_score
+	    FROM javajo_house
+	    LEFT JOIN javajo_review ON javajo_house.house_num = javajo_review.house_num
+	    WHERE 1=1
+	        AND NOT EXISTS (
+	            SELECT 1
+	            FROM javajo_reserv
+	            WHERE
+	                javajo_house.house_num = javajo_reserv.house_num AND
+	                (TO_DATE(#{checkin}, 'YYYY-MM-DD') BETWEEN javajo_reserv.reserv_checkin AND javajo_reserv.reserv_checkout OR
+	                TO_DATE(#{checkout}, 'YYYY-MM-DD') BETWEEN javajo_reserv.reserv_checkin AND javajo_reserv.reserv_checkout)
+	        )
+	        AND #{per_count} &lt;= javajo_house.house_maxperson
+	        AND javajo_house.house_addr LIKE CONCAT(#{area}, '%')
+	        and #{room_cnt} &lt;= javajo_house.house_room 
+	    	and #{bath_cnt} &lt;= javajo_house.house_bath and #{bed_cnt} &lt;= javajo_house.house_bed 
+	    	and javajo_house.house_type = #{build_type}
+	    GROUP BY javajo_house.house_num, javajo_house.user_id, javajo_house.house_name, javajo_house.house_addr, 
+	             javajo_house.house_room, javajo_house.house_bed, javajo_house.house_bath, javajo_house.house_maxperson, 
+	             javajo_house.house_image1, javajo_house.house_image2, javajo_house.house_image3, javajo_house.house_image4, 
+	             javajo_house.house_image5, javajo_house.house_type, javajo_house.house_theme, javajo_house.house_fac, 
+	             javajo_house.house_content, javajo_house.house_price, javajo_house.house_checkin, javajo_house.house_checkout
+	    <choose>
+	        <when test="sort == 'num'">
+	        	ORDER BY javajo_house.house_num DESC           
+	        </when>
+	        <when test="sort == 'price'">
+	            ORDER BY javajo_house.house_price ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY average_score DESC NULLS LAST
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 메인 - 위시리스트 조회 -->
+	<select id="getWish" parameterType="String" resultType="wishListDTO">
+		select w.*, house_name, house_addr, house_price, house_image1
+		from javajo_wishlist w
+		join javajo_house h 
+		on w.house_num = h.house_num
+		where w.user_id = #{user_id}
+	</select>
+	
+	<!-- 메인 - 위시리스트 해제 -->
+	<delete id="delWish" parameterType="java.util.Map">
+		delete from javajo_wishlist 
+		where user_id = #{user_id} and house_num = #{house_num}
+	</delete>
+	
+	<!-- 메인 - 어드민 고객문의 -->
+	<select id="getQnaList" parameterType="java.util.Map" resultType="AdminQnaDTO">
+		select * from (
+        				select rownum rn, A.*
+        				from (
+           						select * from javajo_adminqna
+            					where user_id = #{user_id}
+            					order by ADMINQNA_NUM desc
+       					) A
+   		 			  )
+   		 where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 메인 - 어드민 고객문의 게시글 수 -->
+	<select id="getAdminQnaCount" parameterType="String" resultType="Integer">
+		select count(*) from javajo_adminqna where user_id = #{user_id}
+	</select>
+	
+	<!-- 메인 - 어드민 고객문의 컨텐츠 -->
+	<select id="getQnaCont" parameterType="int" resultType="AdminQnaDTO">
+		select * from javajo_adminqna where adminqna_num = #{adminqna_num}
+	</select>
+	
+	<!-- 메인 - 어드민 고객문의 삭제 -->
+	<delete id="delAdminQna" parameterType="int">
+		delete from javajo_adminqna where adminqna_num = #{adminqna_num}
+	</delete>
+	
+	<!-- 메인 - 어드민 고객문의 등록 -->
+	<insert id="insertAdminQnaF" parameterType="AdminQnaDTO">
+		insert into javajo_adminqna values (seq_adminqna_num.nextval, sysdate, #{adminqna_type}, #{adminqna_title}, #{user_id}, #{adminqna_image}, #{adminqna_gcontent}, '', #{adminqna_status})
+	</insert>
+	
+	<insert id="insertAdminQnaNF" parameterType="AdminQnaDTO">
+		insert into javajo_adminqna values (seq_adminqna_num.nextval, sysdate, #{adminqna_type}, #{adminqna_title}, #{user_id}, '', #{adminqna_gcontent}, '', #{adminqna_status})
+	</insert>
+	
+	
+	<!-- 메인 - 공지사항 조회 -->
+	<select id="getNotice" parameterType="java.util.Map" resultType="NoticeDTO">
+		select * from (select rownum rn, A.* 
+						from (select * from javajo_notice order by notice_num desc)A)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 메인 - 공지사항 게시글 수 조회 -->
+	<select id="getNoticeCount" resultType="Integer">
+		select count(*) from javajo_notice
+	</select>
+	
+	<!-- 메인 - 공지사항 컨텐츠 조회 -->
+	<select id="getNoticeCont" parameterType="int" resultType="NoticeDTO">
+		select * from javajo_notice where notice_num = #{notice_num}
+	</select>
+	
+	<!-- 예약내역 페이지 - (체크인 가까운 순서로 정렬 + 예약 취소시 가장 하단으로 이동) -->
+	<!-- s: 페이징처리 -->
+	<select id="reserveAll" resultType="reservDTO" parameterType="java.util.Map">
+	     SELECT * FROM (
+	        SELECT inner_query.*, ROWNUM rn
+	        FROM (
+	            SELECT jr.*, 
+	                   h.house_num AS h_house_num, 
+	                   h.user_id AS host_id, 
+	                   h.house_image1 AS thumbnail, 
+	                   NVL(r.review_status, '미작성') AS review_status
+	            FROM javajo_reserv jr
+	            JOIN javajo_house h ON jr.house_num = h.house_num
+	            LEFT JOIN javajo_review r ON jr.house_num = r.house_num AND r.user_id = jr.user_id
+	            WHERE jr.user_id = #{user_id}
+	            ORDER BY 
+	                CASE 
+	                    WHEN jr.reserv_status = '이용중' THEN 1
+	                    WHEN jr.reserv_status = '결제완료' THEN 2
+	                    WHEN jr.reserv_status = '이용완료' AND NVL(r.review_status, '미작성') = '미작성' THEN 3
+	                    WHEN jr.reserv_status = '이용완료' AND NVL(r.review_status, '미작성') = '작성완료' THEN 4
+	                    WHEN jr.reserv_status = '예약취소' THEN 5
+	                END ASC,
+	                jr.reserv_checkin ASC
+	        ) inner_query
+	        WHERE rn &lt;= #{endRow}
+	    )
+	    WHERE rn &gt;= #{startRow}
+	</select>
+    
+    <!-- 예약내역 수 -->
+	<select id="countReserv" parameterType="String" resultType="int">
+	    SELECT COUNT(*) FROM javajo_reserv WHERE user_id = #{user_id}
+	</select>
+	<!-- e : 페이징처리 -->
+	
+	<!-- 예약내역 페이지 - 리뷰작성 상태 업데이트 -->
+	<update id="updateReviewStatus" parameterType="ReviewDTO">
+		UPDATE javajo_review r SET r.review_status = '작성완료' WHERE r.house_num = #{house_num} AND r.user_id = #{user_id}
+	</update>
+
+	<!-- 예약내역 페이지 - 예약취소 -->
+	<update id="updateReserveStatus" parameterType="ReservDTO">
+	    update javajo_reserv set reserv_status = '예약취소' where reserv_num = #{reserv_num} and house_num = #{house_num}
+	</update>
+	
+	<!-- 예약내역 페이지 - 리뷰등록 (이미지파일 첨부 O) -->
+	<insert id="insertImgReview" parameterType="ReviewDTO">
+		insert into javajo_review (review_num, house_num, user_id, review_content, review_score, review_image, review_date) 
+		values(seq_review_num.nextval, #{house_num}, #{user_id}, #{review_content}, #{review_score}, #{review_image}, sysdate)
+	</insert>
+	
+	<!-- 예약내역 페이지 - 리뷰등록 (이미지파일 첨부 X) -->
+	<insert id="insertReview" parameterType="ReviewDTO">
+		insert into javajo_review (review_num, house_num, user_id, review_content, review_score, review_image, review_date) 
+		values(seq_review_num.nextval, #{house_num}, #{user_id}, #{review_content}, #{review_score}, 'default_review.png', sysdate)
+	</insert>
+	
+	<!-- 숙소 상세 페이지 - 숙소정보 조회 -->
+	<select id="getHouseByNum" parameterType="int" resultType="houseDTO">
+	    SELECT 
+	        h.*,
+	        ht.htype_des AS htype_des,
+	        ht.htype_image AS house_type_image
+	    FROM javajo_house h
+	    LEFT JOIN house_type ht ON h.house_type = ht.htype
+	    WHERE h.house_num = #{house_num}
+	</select>
+	
+    <!-- 테마 이미지, 설명글 뽑아오기 -->
+    <select id="getTheme" parameterType="String" resultType="ThemeDTO">
+       select * from house_theme where htheme = #{t}
+    </select>
+    
+	<!-- 편의시설 이미지, 설명글 뽑아오기 -->
+	<select id="getFac" parameterType="String" resultType="FacDTO">
+       select * from house_fac where hfac = #{f}
+    </select>
+    
+    <!-- 숙소상세 페이지 - 해당 숙소의 예약된 날짜 리스트 뽑아오기 -->
+   <select id="reservList" parameterType="int" resultType="ReservDTO">
+      select house_num, reserv_status, reserv_checkin, reserv_checkout from javajo_reserv 
+      where house_num = #{house_num}
+           and reserv_status != '예약취소'
+   </select>
+	
+	<!-- 숙소상세 페이지 - 위시리스트 추가 -->
+	<insert id="addToWishlist" parameterType="wishListDTO">
+	    MERGE INTO javajo_wishlist t
+	    USING (SELECT #{user_id} AS user_id, #{house_num} AS house_num FROM dual) s
+	    ON (t.user_id = s.user_id AND t.house_num = s.house_num)
+	    WHEN NOT MATCHED THEN INSERT (user_id, house_num) VALUES (s.user_id, s.house_num)
+	</insert>
+	
+	<!-- 숙소상세 페이지 - 위시리스트 삭제 -->
+	<delete id="removeFromWishlist" parameterType="wishListDTO">
+	    DELETE FROM javajo_wishlist WHERE user_id = #{user_id}
+	    AND (
+	        EXISTS (
+	            SELECT 1 
+	            FROM (SELECT DISTINCT house_num FROM javajo_wishlist WHERE user_id = #{user_id}) w
+	            WHERE w.house_num = #{house_num} HAVING COUNT(*) > 1
+	        )
+	        OR house_num = #{house_num}
+	    )
+	</delete>
+	
+	<!-- 숙소상세 페이지 - 예약하기  -->
+	<insert id="insertReserve" parameterType="ReservDTO">
+	    insert into javajo_reserv (reserv_num, house_num, house_name, user_id, reserv_status, reserv_date, reserv_checkin, reserv_checkout, reserv_person, reserv_pay, reserv_paycharge, reserv_totpay, reserv_paydate, reserv_paytype) 
+	    values (seq_reserv_num.nextval, #{house_num}, #{house_name}, #{user_id}, #{reserv_status}, sysdate, TO_DATE(#{reserv_checkin}, 'YYYY-MM-DD HH24:MI'), TO_DATE(#{reserv_checkout}, 'YYYY-MM-DD HH24:MI'), #{reserv_person}, #{reserv_pay}, #{reserv_paycharge}, #{reserv_totpay}, sysdate, #{reserv_paytype})
+	</insert>
+	
+	<!-- 예약내역 페이지 - 예약내역 페이지 들어올 때마다 상태 업데이트 처리 -->
+	<update id="checkinCheck" parameterType="String">
+		update javajo_reserv 
+		set reserv_status = '결제완료'
+		where sysdate &lt; reserv_checkin
+			  and reserv_status != '예약취소'
+			  and user_id = #{user_id} 
+	</update>
+	
+	<!-- 상태 업데이트[이용중] -->
+	<update id="checkinUpdate" parameterType="String">
+		update javajo_reserv 
+		set reserv_status = '이용중'
+		where reserv_checkin &lt; sysdate
+			  and sysdate &lt; reserv_checkout
+			  and reserv_status != '예약취소'
+			  and user_id = #{user_id} 
+	</update>
+	
+	<!-- 상태 업데이트[이용완료] -->
+	<update id="checkoutCheck" parameterType="String">
+		update javajo_reserv 
+		set reserv_status = '이용완료'
+		where reserv_checkout &lt; sysdate 
+			  and reserv_status != '예약취소' 
+			  and reserv_status != '리뷰완료'
+			  and user_id = #{user_id}
+	</update>
+	
+	<!-- 숙소상세 페이지 - 리뷰 영역 -->
+	<select id="listReview" parameterType="int" resultType="ReviewDTO">
+	    SELECT * FROM (SELECT * FROM javajo_review WHERE house_num = #{house_num} 
+	    ORDER BY review_score DESC) WHERE ROWNUM &lt;&#61; 2
+	</select>
+	
+	<!-- 전체리뷰 페이지 -->
+	<select id="countReviews" parameterType="int" resultType="int">
+	    SELECT COUNT(*) FROM javajo_review WHERE house_num = #{house_num}
+	</select>
+	
+	<!-- 전체리뷰 페이지 - 전체 리뷰를 페이징화해서 가져오기 -->
+	<select id="reviewAll" parameterType="map" resultType="ReviewDTO">
+	    SELECT * FROM (SELECT r.*, ROWNUM AS rn 
+        FROM (SELECT r.* FROM javajo_review r WHERE r.house_num = #{house_num} 
+        ORDER BY r.review_date DESC) r
+        WHERE ROWNUM &#60;= #{endRow})
+	    WHERE rn &#62; #{startRow}
+	</select>
+	
+	<!-- 숙소상세 페이지 - QnA 등록 -->
+	<insert id="insertQna" parameterType="HostQnaDTO">
+		INSERT INTO javajo_hostqna (hostqna_num, house_num, hostqna_title, user_id, hostqna_gcontent, hostqna_hcontent, hostqna_status, hostqna_date) 
+		VALUES (seq_hostqna_num.NEXTVAL, #{house_num}, #{hostqna_title}, #{user_id}, #{hostqna_gcontent}, '', '답변대기', sysdate)
+	</insert>
+	
+	<!-- 숙소상세 페이지 - QnA 리스트 -->
+	<select id="listQna" parameterType="java.util.Map" resultType="HostQnaDTO">	    
+	    select * from (select rownum rn, A.* 
+						  from (select * from javajo_hostqna 
+								where house_num = #{house_num} 
+								order by hostqna_num desc)A)
+		where rn between #{startRow} and #{endRow}	    
+	</select>
+	
+	<!-- 숙소상세 페이지 - QnA 삭제 -->
+	<delete id="delQna" parameterType="int">
+	    DELETE FROM javajo_hostqna WHERE hostqna_num = #{hostqna_num}
+	</delete>
+	
+	<!-- 숙소상세 페이지 - QnA 게시글 수 -->
+	<select id="getHostQnaCount" parameterType="int" resultType="int">
+		select count(*) from javajo_hostqna where house_num = #{house_num}
+	</select>
+	
+</mapper>

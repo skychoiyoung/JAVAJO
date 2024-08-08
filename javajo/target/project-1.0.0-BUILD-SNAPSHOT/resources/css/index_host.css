@@ -1,0 +1,297 @@
+	/* s: main */
+	@charset "UTF-8";
+	/* s: host_top */
+		tbody tr a:hover, .pagination .p_active, .pagination a:hover, .footer a:hover {color: #3747C7;}
+		.pagination .p_active::after {background: #3747C7;}
+		.pagination .page_btn img:hover {filter: invert(22%) sepia(35%) saturate(5135%) hue-rotate(227deg) brightness(97%) contrast(88%);}
+		
+		#host_top {max-width: 1920px; height: 140px; margin: 0 auto; box-shadow: 0px 0px 5px #ccc;}
+		#host_top .inner_header {width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 100%;}
+		#host_top .inner_header .logo_box img {width: 180px;}
+		
+		#host_top .inner_header .search_box {position: relative; height: 50px; border-radius: 25px; border: 1px solid #ccc; box-shadow: 0px 8px 6px -6px #666;}
+		#host_top .inner_header .search_box .submit_box {display: flex; justify-content: center; align-items: center; width: 50px;}
+		#host_top .inner_header .search_box .submit_box .submit_icon {width: 24px; border: 1px solid #b9b9b9ff; padding: 4px; border-radius: 50%;}
+		#host_top .inner_header .search_box .submit_box .submit_icon:hover {background-color: #eaeaea;}
+		
+		#host_top .inner_header .search_box form {display: flex; justify-content: center; align-items: center;}
+		#host_top .inner_header .search_box .area_box, #host_top .inner_header .search_box .person_box {width: 180px; height: 50px; border: none; background: transparent; font-size: 20px; color: #555;}
+		#host_top .inner_header .search_box .area_box:hover, #host_top .inner_header .search_box .date_btn:hover, #host_top .inner_header .search_box .person_btn:hover {background-color: #eaeaeab9; border-radius: 25px;}
+		#host_top .inner_header .search_box .area_box option {padding: 3px 0; font-size: 16px;}
+		
+		#host_top .inner_header .member_box {position: relative; display: flex; justify-content: center; align-items: center;}
+		#host_top .inner_header .member_box .mode_btn {display: inline-block; padding: 6px 10px; font-size: 19px;}
+		#host_top .inner_header .member_box .mode_btn:hover {color: #ff385d;}
+		#host_top .inner_header .member_box .member_icons {display: inline-flex; justify-content: center; align-items: center; width: auto; height: 50px; margin-left: 15px; padding: 0 20px; border: 1px solid #eee; border-radius: 25px;}
+		#host_top .inner_header .member_box .member_icons:hover {box-shadow: -5px 5px 8px -5px #ccc;}
+		#host_top .inner_header .member_box .member_icons p {margin: 0 7px; font-size: 20px; line-height: 24px;}
+		#host_top .inner_header .member_box .member_icons p span {font-size: 22px; vertical-align: top;}
+		#host_top .inner_header .member_box .member_icons .mem_icon {width: 20px;}
+		
+		#host_top .inner_header .member_box .member_detail {display: none; position: absolute; top: 60px; left: 50%; transform: translateX(-50%); width: 200px; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0px 0px 5px #c2c2c2; font-size: 19px; text-align: center; color: #555; z-index: 22;}
+		#host_top .inner_header .member_box .member_detail li {height: 40px; line-height: 40px;}
+		#host_top .inner_header .member_box .member_detail li:hover {background-color: #eaeaeab9;}
+		#host_top .inner_header .member_box .member_detail li a {display: inline-block; width: 100%;}
+	/* e: host_top */
+	
+	/* s: #house_manage */
+		#house_manage .manage_box > .tit_box {padding: 30px 0; display: flex; justify-content: space-between; border-bottom: 1px solid #ccc;}
+		#house_manage .manage_box > .tit_box p {font-size: 32px;}
+		#house_manage .manage_box .tit_box .add_house {position: relative; font-size: 22px;}
+		#house_manage .manage_box .tit_box .add_house::after {content: ''; position: absolution; left: 0; bottom: 0; display: block; height: 1px; background: #000;}
+		#house_manage .manage_box .tit_box .add_house:hover {color: #3747C7;}
+		#house_manage .manage_box .tit_box .add_house:hover::after {background: #3747C7;}
+		
+		#house_manage .manage_box .house_list {padding: 30px 0; display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 20px 15px;}
+		#house_manage .manage_box .house_list .house_tit {width: 100%; padding: 20px 0; font-size: 26px; text-align: center;}
+		#house_manage .manage_box .house_list .house_items {width: 370px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;}
+		#house_manage .manage_box .house_list .house_items a {display: inline-block;}
+		#house_manage .manage_box .house_list .house_items .house_img {width: 370px; height: 280px; border-radius: 2px; box-shadow: 1px 2px 8px 1px #ccc; overflow: hidden;}
+		#house_manage .manage_box .house_list .house_items img {width: 100%; height: 100%; object-fit:cover; transform:scale(1.0); transition: transform .5s;}
+		#house_manage .manage_box .house_list .house_items img:hover {transform:scale(1.1); transition: transform .5s;}
+		#house_manage .manage_box .house_list .house_items .tit_box {margin-top: 16px; font-size: 28px; text-align: center; }
+	/* e: #house_manage */
+	
+	/* s: 숙소 사진 업로드, 수정 */
+		.filebox_wrap {width: 1000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;}
+		.filebox_wrap .before_preview {margin-top: 30px; height: 520px;}
+		.filebox_wrap .before_preview.defaultPreview {position: relative; border: 1px solid #eee; border-radius: 4px; box-shadow: 1px 2px 3px 1px #eee;}
+		.filebox_wrap .before_preview.defaultPreview::before {content: '숙소 등록 후 실제 숙소 상세 페이지에서 보여지는 화면을 미리 확인 가능한 공간입니다.\A사진을 드래그하여 순서 조정 가능하며, 첫번째에 위치한 이미지는 등록하신 숙소의 대표 이미지가 됩니다.'; white-space:pre; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; line-height: 34px; color: #555; text-align: center; z-index: -10;}
+		.filebox_wrap .before_preview.defaultPreview::after {content: ''; position: absolute; bottom: 30%; left: 50%; transform: translateX(-50%); display: block; width: 180px; height: 39px; background: url(../images/logo/javajo_host_logo.jpg)no-repeat center center/contain; opacity: .8; z-index: -10;}
+		.filebox_wrap .preview_imgs {display: grid; justify-content: space-between; grid-template-columns: 500px 250px 250px; grid-template-rows: 250px 250px; grid-template-areas: 'a b c' 'a d e'; grid-gap: 20px;}
+		.filebox_wrap .preview_imgs li {position:relative; max-width: 100%; max-height: 100%; width: 100%; height: 100%; object-fit: cover; border-radius: 2px; box-shadow: 1px 2px 3px 1px #ccc;}
+		.filebox_wrap .preview_imgs li img {width: 100%; height: 100%;}
+		.filebox_wrap .preview_imgs li:nth-child(1) {grid-area: a;}
+		.filebox_wrap .preview_imgs li:nth-child(2) {grid-area: b;}
+		.filebox_wrap .preview_imgs li:nth-child(3) {grid-area: c;}
+		.filebox_wrap .preview_imgs li:nth-child(4) {grid-area: d;}
+		.filebox_wrap .preview_imgs li:nth-child(5) {grid-area: e;}
+		.filebox_wrap .inputFile{margin-top: 14px;}
+		.filebox_wrap .inputFile ul li {padding-left: 10px; font-size: 24px; line-height: 26px;}
+		.filebox_wrap .inputFile .addImgBtn {display: inline-block; margin-top: 10px;}
+		.filebox_wrap .inputFile .addImgBtn input {font-size: 18px;}
+		.filebox_wrap .insert_btn {width: 90px	; padding: 4px 0; border-radius: 4px; background: #3747C7; box-shadow: 1px 2px 3px 1px #ccc; font-size: 22px; color: #fefefe;}
+		.filebox_wrap .delBtn{position: absolute; top: 0; right: 0; font-size: 30px; background-color: #000; color: #fff; width: 18px; height: 18px; line-height: 16px; display: inline-block; text-align: center; cursor: pointer;}
+		.filebox_wrap .ui-sortable-handle {display: none !important;}
+	/* e: 숙소 사진 업로드, 수정 */
+	
+	/* s: host_houseadd */
+		#host_houseadd .host_house > .tit_box {padding: 30px 0; display: flex; justify-content: space-between; border-bottom: 1px solid #ccc;}
+		#host_houseadd .host_house .tit_box p {font-size: 32px;}       
+		#host_houseadd .host_house .house_info {margin: 30px auto; width: 1000px; border: 1px solid #ccc;}
+		#host_houseadd .host_house .house_info .info_list {width: 440px; margin: 0 auto; padding: 30px 0; display: flex; flex-direction: column; align-items: flex-start; overflow: hidden;}
+		#host_houseadd .host_house .house_info .info_list li {width: 100%; display: flex; align-items: center; font-size: 24px;}
+		#host_houseadd .host_house .house_info .info_list li .file_box {display: flex; gap: 6px;}
+		#host_houseadd .host_house .house_info .info_list li .minus_btn,
+		#host_houseadd .host_house .house_info .info_list li .plus_btn {width: 20px; height: 20px;}
+		#host_houseadd .host_house .house_info .info_list li .count_box {width: 20px; border: none; text-align: center; font-size: 24px;}
+		#host_houseadd .host_house .house_info .info_list li span {display: inline-block; width: 100px;}
+		#host_houseadd .host_house .house_info .info_list li input {background: #fff; border: 1px solid #ccc; border-radius: 2px; padding: 0 6px; font-size: 24px;}
+		#host_houseadd .host_house .house_info .info_list li .time_select {position: relative;}
+		#host_houseadd .host_house .house_info .info_list li .time_select::after {content: ':'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: block; font-size: 24px; color: #555;}
+		#host_houseadd .host_house .house_info .info_list li select {border: 1px solid #ccc; border-radius: 2px; padding: 0 6px; font-size: 24px;}
+		#host_houseadd .host_house .house_info .info_list li select + select {margin-left: 8px;}
+		#host_houseadd .host_house .house_info .info_list li textarea {width: 330px; padding: 4px 6px; border: 1px solid #ccc; border-radius: 2px; font-size: 22px;}
+		#host_houseadd .host_house .house_info .info_list li + li {margin-top: 16px;}
+		#host_houseadd .host_house .house_info .info_list li:nth-child(3), 
+		#host_houseadd .host_house .house_info .info_list li:nth-child(4) {margin-left: 100px;}
+		#host_houseadd .host_house .house_info .info_list li .theme_box, 
+		#host_houseadd .host_house .house_info .info_list li .fac_box {width: 340px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;}
+		#host_houseadd .host_house .house_info .info_list li .fac_box input[type="checkbox"] {margin-right: 10px; width: 16px; height: 16px;}
+		#host_houseadd .host_house .house_info .info_list li .theme_box input[type="checkbox"] {margin-right: 10px; width: 16px; height: 16px;}
+		#host_houseadd .host_house .house_info .info_list li .theme_box label,
+		#host_houseadd .host_house .house_info .info_list li .fac_box label {display: flex; align-items: center; width: 50%; font-size: 24px;}
+		#host_houseadd .host_house .house_info .house_noti {width: 500px; margin: 0 auto;}
+		#host_houseadd .host_house .house_info .house_noti li {position: relative; padding-left: 10px; font-size: 18px; color: #555;}
+		#host_houseadd .host_house .house_info .house_noti li + li {margin-top: 6px;}
+		#host_houseadd .host_house .house_info .house_noti li::before {content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); display: block; width: 3px; height: 3px; border-radius: 50%; background-color: #555;;}
+		#host_houseadd .host_house .house_info .btn_box {margin: 30px auto; text-align: center;}
+		#host_houseadd .host_house .house_info .btn_box button {display: inline-flex; justify-content: center; align-items: center; padding: 6px 30px; border-radius: 12px; background-color: #3747C7; box-shadow: 0px 2px 5px #ccc; font-size: 22px; color: #fff;}
+		#host_houseadd .host_house .house_info .btn_box button:last-child {margin-left: 14px; background: #ccc;}
+		#host_houseadd .host_house .file_box input[type="file"] {position: absolute; width: 0; height: 0; padding: 0; overflow: hidden; border: 0;}
+		#host_houseadd .host_house .file_box .file_name {display: inline-block; padding: 10px 14px; vertical-align: middle; border: 1px solid #dddddd; width: 180px; color: #999;}
+		#host_houseadd .host_house .file_box label {display: inline-block; padding: 4px 10px; color: #fff; vertical-align: middle; background-color: #ccc; cursor: pointer; margin-left: 4px;}       
+	/* e: host_houseadd */
+	
+	/* s: host_houseupdate */
+		#host_houseupdate .host_house > .tit_box {padding: 30px 0; display: flex; justify-content: space-between; border-bottom: 1px solid #ccc;}
+		#host_houseupdate .host_house .tit_box p {font-size: 32px;}       
+		#host_houseupdate .host_house .house_info {margin: 30px auto; width: 1000px; border: 1px solid #ccc;}
+		#host_houseupdate .host_house .house_info .info_list {width: 440px; margin: 0 auto; padding: 30px 0; display: flex; flex-direction: column; align-items: flex-start; overflow: hidden;}
+		#host_houseupdate .host_house .house_info .info_list li {width: 100%; display: flex; align-items: center; font-size: 24px;}
+		#host_houseupdate .host_house .house_info .info_list li .file_box {display: flex; gap: 6px;}
+		#host_houseupdate .host_house .house_info .info_list li .minus_btn,
+		#host_houseupdate .host_house .house_info .info_list li .plus_btn {width: 20px; height: 20px;}
+		#host_houseupdate .host_house .house_info .info_list li .count_box {width: 20px; border: none; text-align: center; font-size: 24px;}
+		#host_houseupdate .host_house .house_info .info_list li span {display: inline-block; width: 100px;}
+		#host_houseupdate .host_house .house_info .info_list li input {background: #fff; border: 1px solid #ccc; border-radius: 2px; padding: 0 6px; font-size: 24px;}
+		#host_houseupdate .host_house .house_info .info_list li select {border: 1px solid #ccc; border-radius: 2px; padding: 0 6px; font-size: 24px;}
+		#host_houseupdate .host_house .house_info .info_list li select + select {margin-left: 8px;}
+		#host_houseupdate .host_house .house_info .info_list li .time_select {position: relative;}
+		#host_houseupdate .host_house .house_info .info_list li .time_select::after {content: ':'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: block; font-size: 24px; color: #555;}
+		#host_houseupdate .host_house .house_info .info_list li textarea {width: 330px; padding: 4px 6px; border: 1px solid #ccc; border-radius: 2px; font-size: 22px;}
+		#host_houseupdate .host_house .house_info .info_list li + li {margin-top: 16px;}
+		#host_houseupdate .host_house .house_info .info_list li:nth-child(2) input {width: 320px;}
+		#host_houseupdate .host_house .house_info .info_list li .theme_box, 
+		#host_houseupdate .host_house .house_info .info_list li .fac_box {width: 340px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;}
+		#host_houseupdate .host_house .house_info .info_list li .fac_box input[type="checkbox"] {margin-right: 10px; width: 16px; height: 16px;}
+		#host_houseupdate .host_house .house_info .info_list li .theme_box input[type="checkbox"] {margin-right: 10px; width: 16px; height: 16px;}
+		#host_houseupdate .host_house .house_info .info_list li .theme_box label,
+		#host_houseupdate .host_house .house_info .info_list li .fac_box label {display: flex; align-items: center; width: 50%; font-size: 24px;}
+		#host_houseupdate .host_house .house_info .house_noti {width: 500px; margin: 0 auto;}
+		#host_houseupdate .host_house .house_info .house_noti li {position: relative; padding-left: 10px; font-size: 18px; color: #555;}
+		#host_houseupdate .host_house .house_info .house_noti li + li {margin-top: 6px;}
+		#host_houseupdate .host_house .house_info .house_noti li::before {content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); display: block; width: 3px; height: 3px; border-radius: 50%; background-color: #555;;}
+		#host_houseupdate .host_house .house_info .btn_box {margin: 30px auto; text-align: center;}
+		#host_houseupdate .host_house .house_info .btn_box button {display: inline-flex; justify-content: center; align-items: center; padding: 6px 30px; border-radius: 12px; background-color: #3747C7; box-shadow: 0px 2px 5px #ccc; font-size: 22px; color: #fff;}
+		#host_houseupdate .host_house .house_info .btn_box button:last-child {margin-left: 14px; background: #ccc;}
+		#host_houseupdate .host_house .file_box input[type="file"] {position: absolute; width: 0; height: 0; padding: 0; overflow: hidden; border: 0;}
+		#host_houseupdate .host_house .file_box .file_name {display: inline-block; padding: 10px 14px; vertical-align: middle; border: 1px solid #dddddd; width: 180px; color: #999;}
+		#host_houseupdate .host_house .file_box label {display: inline-block; padding: 4px 10px; color: #fff; vertical-align: middle; background-color: #ccc; cursor: pointer; margin-left: 4px;}       
+	/* e: host_houseupdate */
+	
+	/* s: house_reserv */ 
+		#host_reserve .reserve_tit-box {padding: 30px 0; border-bottom: 1px solid #ccc;}
+		#host_reserve .reserve_tit-box .reserve_tit {font-size: 32px;}
+		#host_reserve .reserve_search {margin: 30px 0; text-align: center;}
+		#host_reserve .reserve_search .housename, #host_reserve .reserve_search .status {padding: 0 10px; border-radius: 4px; text-align: center; font-size: 24px; text-align-last: center; margin: 0 10px;}
+		#host_reserve .reserve_search select option {text-align: center;}
+		#host_reserve .reserve_search span {display: inline-block; font-size: 24px;}
+		#host_reserve .reserve_search button {padding: 0 20px; background-color: #3747C7; border-radius: 4px; box-shadow: 0px 2px 5px #ccc; font-size: 24px; color: #fff;}
+		#host_reserve .reserve_list {margin: 30px auto 0;}
+	/* e: house_reserv */
+	
+	/* s: host_paymanage */
+		#host_paymanage .paymanage_tit-box {padding: 30px 0; border-bottom: 1px solid #ccc;}
+		#host_paymanage .paymanage_tit-box .paymanage_tit {font-size: 32px;}
+		#host_paymanage .paymanage_search {margin: 30px 0; text-align: center;}
+		#host_paymanage .paymanage_search label {display: inline-block; font-size: 24px;}
+		#host_paymanage .paymanage_search label + label {margin-left: 30px;}
+		#host_paymanage .paymanage_search label > select {padding: 0 10px; margin: 0 2px; border-radius: 4px; font-size: 24px;}
+		#host_paymanage .paymanage_search label > select option {text-align: center;}
+		#host_paymanage .paymanage_search button {padding: 0 20px; background-color: #3747C7; border-radius: 4px; box-shadow: 0px 2px 5px #ccc; font-size: 24px; color: #fff; margin-left: 14px;}
+		#host_paymanage .paymanage_search .search_wrap {display: flex; justify-content: space-between; align-items: center;}
+		#host_paymanage .paymanage_search .search_wrap .totprice {font-size: 38px; color: #555;}     
+		#host_paymanage .paymanage_list {margin: 30px auto 0;}
+	/* e: host_paymanage */
+	
+	/* s: host_pdt_info */
+		#host_pdt_info .pdt_wrap {padding-top: 30px;}
+		#host_pdt_info .pdt_info .pdt_tit {font-size: 34px;}
+		#host_pdt_info .pdt_info .pdt_imgs {margin-top: 30px; display: grid; justify-content: space-between; grid-template-columns: 550px 270px 270px; grid-template-rows: 270px 270px; grid-template-areas: 'a b c' 'a d e'; grid-row-gap: 20px;}
+		#host_pdt_info .pdt_info .pdt_imgs img {max-width: 100%; max-height: 100%; width: 100%; height: 100%; object-fit: cover; border-radius: 2px; box-shadow: 1px 2px 8px 1px #ccc;}
+		#host_pdt_info .pdt_img1 {grid-area: a;}
+		#host_pdt_info .pdt_img2 {grid-area: b;}
+		#host_pdt_info .pdt_img3 {grid-area: c;}
+		#host_pdt_info .pdt_img4 {grid-area: d;}
+		#host_pdt_info .pdt_img5 {grid-area: e;}
+		
+		#host_pdt_info .pdt_info .pdt_info-wrap {display: flex; justify-content: space-between; padding: 30px 0;}
+		#host_pdt_info .pdt_info .pdt_detail {width: 650px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_form {position: relative; display: flex; padding-left: 20px; gap: 50px; text-align: center; color: #555;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_form .pdt_type {display: flex; align-items: center;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_form .pdt_type p {margin: 0 16px; font-size: 23px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_form .pdt_type img, #host_pdt_info .pdt_info .pdt_detail .pdt_form .pdt_summary li img {width: 30px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_form .pdt_summary {display: flex; align-items: center; gap: 16px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_form .pdt_summary li {display: flex; align-items: center; gap: 12px; font-size: 24px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_form .pdt_summary li span {display: inline-block;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_form .pdt_summary li:first-child {position: relative;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_form .pdt_summary li:first-child::after {content:'MaxPer'; position:absolute; bottom: -3px; left:0; display: block; font-size: 16px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_theme-box {margin-top: 20px; border-top: 1px solid #eee;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_theme-box p {margin-top: 30px; font-size: 28px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_theme-box .pdt_theme {display: flex; flex-wrap: wrap; justify-content: space-between; padding: 30px 20px; gap: 20px 0;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_theme-box .pdt_theme li {display: flex; align-items: center; width: 50%;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_theme-box .pdt_theme li .theme_img {width:35px; height:35px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_theme-box .pdt_theme li .theme_name {margin-left: 16px; font-size: 22px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_host {display: flex; align-items: center; margin-top: 20px; padding: 20px; border-top: 1px solid #eee; border-bottom: 1px solid #eee;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_host .host_img {width: 50px; height: 50px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_host .host_img img {width: 100%; height: 100%;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_host .host_txt {margin-left: 30px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_host .host_txt p:nth-child(1) {font-size: 26px;}
+		#host_pdt_info .pdt_info .pdt_detail .pdt_host .host_txt p:nth-child(2) {font-size: 16px; color: #555;}
+		
+		#host_pdt_info .pdt_info .pdt_detail .inout_box {display: flex; gap: 30px; padding: 30px 20px;}
+		#host_pdt_info .pdt_info .pdt_detail .inout_box li {display: flex; align-items: center; font-size: 22px;}
+		#host_pdt_info .pdt_info .pdt_detail .inout_box li span {margin: 0 4px; font-size: 26px;}
+		#host_pdt_info .pdt_info .pdt_detail .inout_box li img {margin-right: 10px; width: 24px; height: 24px;}
+		
+		#host_pdt_info .pdt_info .pdt_detail .pdt_desc {padding-left: 20px; width: 100%; height: auto; font-size: 22px; border: none;}
+		#host_pdt_info .pdt_info .pdt_reserve {width: 360px; max-height: 430px; padding: 24px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0px 0px 5px #ccc; text-align: center;}
+		.unavailable {background: #9da7f9;} /* 예약 불가능 */
+		/* s: 캘린더 */
+		#host_pdt_info .ui-datepicker {width: 340px; margin: 0 auto; padding: 0; background-color: #fff; border: none !important;}
+		#host_pdt_info .ui-datepicker table {margin: 0 auto; font-size: 1em;}
+		#host_pdt_info .ui-datepicker .ui-datepicker-header {position: relative; width: 100%; height: 40px; display: flex; justify-content: center; background-color: #fff; border: none;}
+		#host_pdt_info .ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {position: absolute; top: 50%!important; transform: translateY(-50%);}
+		#host_pdt_info .ui-datepicker .ui-datepicker-prev span, #host_pdt_info .ui-datepicker .ui-datepicker-next span {position: initial; display: inline-block; margin: 0; width: 100%; height: 100%; background: url('../images/main/right_arrow.png') no-repeat center; background-size: 1.5em;}
+		#host_pdt_info .ui-datepicker .ui-datepicker-prev span {background: url('../images/main/left_arrow.png') no-repeat center; background-size: 1.5em;}
+		#host_pdt_info .ui-datepicker .ui-datepicker-title {font-size: 1.7em; line-height: 40px;}
+		#host_pdt_info .ui-datepicker th {width: 48px; padding: 0.5em 0; font-size: 1.3em;}
+		#host_pdt_info .ui-datepicker td {position: relative; width: 48px; height: 31px;}
+		#host_pdt_info .ui-datepicker td span, .ui-datepicker td a {height: 100%; padding: 0 2px;}
+		#host_pdt_info .ui-datepicker .ui-state-default {position: relative; border: 1px solid #ccc; box-sizing: border-box; background-color: transparent; font-size: 1.2em; color: #000; text-align: left; padding: 0 0.15em;}
+		#host_pdt_info .ui-datepicker .ui-state-default::before {content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);}
+		#host_pdt_info .ui-datepicker .ui-state-default span {position: absolute; left: 50%; transform: translateX(-50%); bottom: 0.1em; width: 100%; height: initial; font-size: 16px; text-align: center;}
+		#host_pdt_info .btn_box {margin-top: 20px;}
+		#host_pdt_info .btn_box button {width: 200px; padding: 8px 0; box-shadow: 1px 2px 8px 1px #ccc; border-radius: 4px; font-size: 22px;}
+		#host_pdt_info .btn_box .edit_btn {margin-bottom: 10px; background: #3747C7; color: #fff;}
+		/* e: 캘린더 */
+		
+		#host_pdt_info .pdt_info .pdt_fac, #host_pdt_info .pdt_info .pdt_qna, #host_pdt_info .pdt_info .pdt_loc, #host_pdt_info .pdt_info .pdt_review {padding: 30px 0; border-top: 1px solid #ccc;}
+		#host_pdt_info .pdt_info .pdt_fac .fac_tit, #host_pdt_info .pdt_info .pdt_loc .loc_tit {margin-bottom:30px; font-size: 28px;}
+		#host_pdt_info .pdt_info .pdt_fac .fac_list {display: flex; flex-wrap: wrap; align-items: center; gap: 30px 0; padding: 0 30px;}
+		#host_pdt_info .pdt_info .pdt_fac .fac_list .fac_item {display: flex; align-items: center; gap: 20px; width: calc(100%/3); text-align: center;}
+		#host_pdt_info .pdt_info .pdt_fac .fac_list .fac_item img {width: 40px;}
+		#host_pdt_info .pdt_info .pdt_fac .fac_list .fac_item p {font-size: 22px;}
+		
+		#host_pdt_info .pdt_info .pdt_loc .map_box .map_addr {font-size: 26px; color: #555;}
+		#host_pdt_info .pdt_info .pdt_loc .map_box .pdt_map {margin-top: 30px; width: 1120px; height: 480px;}
+		
+		#host_pdt_info .pdt_info .pdt_qna .qna_tit-box, #host_pdt_info .pdt_info .pdt_review .review_tit-box {margin-bottom: 30px; display: flex; justify-content: space-between;}
+		#host_pdt_info .pdt_info .pdt_qna .qna_tit-box .qna_tit, #host_pdt_info .pdt_info .pdt_loc .loc_tit-box .loc_tit,  #host_pdt_info .pdt_info .pdt_review .review_tit {font-size: 28px;}
+		#host_pdt_info .pdt_info .pdt_review .review_btn {position:relative; font-size: 22px;}
+		#host_pdt_info .pdt_info .pdt_review .review_btn::after {content: ''; position: absolution; left: 0; bottom: 0; display: block; height: 1px; background: #000;}
+		#host_pdt_info .pdt_info .pdt_review .review_btn:hover {color: #3747C7;}
+		#host_pdt_info .pdt_info .pdt_review .review_btn:hover::after {background: #3747C7;}
+		
+		#host_pdt_info .pdt_info .pdt_review .review_list {display:flex;}
+		#host_pdt_info .pdt_info .pdt_review .review_list .review_item {width: 50%; display: flex; align-items: center; gap: 16px;}
+		#host_pdt_info .pdt_info .pdt_review .review_list .review_item .review_img {width: 170px; height: 170px; border-radius: 4px; overflow: hidden; box-shadow: 1px 2px 14px 1px #ccc;}
+		#host_pdt_info .pdt_info .pdt_review .review_list .review_item .review_img img {width: 100%; height: 100%;} 
+		#host_pdt_info .pdt_info .pdt_review .review_list li + li {padding-top: 16px;}
+		#host_pdt_info .pdt_info .pdt_review .review_list .review_txt {width: 350px;}
+		#host_pdt_info .pdt_info .pdt_review .review_list .review_txt p:not(:nth-child(1)) {margin-top: 6px;}
+		#host_pdt_info .pdt_info .pdt_review .review_list .review_txt .review_id {font-size: 20px;}
+		#host_pdt_info .pdt_info .pdt_review .review_list .review_txt .review_date {font-size: 19px;}
+		#host_pdt_info .pdt_info .pdt_review .review_list .review_txt .review_grade {margin-top: 6px; display: flex; gap: 2px;}
+		#host_pdt_info .pdt_info .pdt_review .review_list .review_txt .review_cont {font-size: 22px; border:none;}
+	
+	/* 숙소문의 조회 */
+		#host_pdt_info .qna_toggle-box {display: flex; flex-direction: column; align-items: center; width: 800px; margin: 30px auto; text-align: left;}
+		#host_pdt_info .question_box, #host_pdt_info .answer_box {display: flex; flex-direction: column;}
+		#host_pdt_info .answer_box {position: relative; margin-top: 60px;}
+		#host_pdt_info .answer_box::before {content: ''; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); display: block; width: 734px; height: 1px; background-color: #ccc;}
+		#host_pdt_info .qna_toggle-box .answer_box p {font-size: 24px;}
+		#host_pdt_info .qna_toggle-box label {font-size: 24px;}
+		#host_pdt_info .qna_toggle-box label + label {margin-top: 10px;}
+		#host_pdt_info .qna_toggle-box input {margin-left: 10px; width: 500px; border: none; font-size: 24px;}
+		#host_pdt_info .qna_toggle-box textarea {margin-top: 10px; width: 720px; height: 180px; padding: 6px; font-size: 22px;}
+		#host_pdt_info .qna_toggle-box .button_box {margin-top: 30px; text-align: center;}
+		#host_pdt_info .qna_toggle-box .button_box .qna_btn, #host_pdt_info .qna_toggle-box .button_box .del_btn {width: 100px; height: 36px; background-color: #3747C7; border-radius: 10px; box-shadow: 0px 2px 5px #ccc; font-size: 22px; color: #fff;}
+
+	/* 숙소문의 QnA 리스트 */
+		#host_pdt_info .pdt_info .pdt_qna .qna_list {width: 1080px; margin: 0 auto;}
+	
+	/* 숙소문의 QnA 팝업 */
+		#host_pdt_info .qna_box {display: none; position: fixed; top:50%; left: 50%; transform: translate(-50%, -50%); width: 480px; background-color: #fff; border: 1px solid #eee; padding: 30px; border-radius: 10px; box-shadow: 0px 0px 5px #ccc; font-size: 20px; z-index: 99;}
+		#host_pdt_info .qna_box .qnd_pdt {padding-bottom: 20px; border-bottom: 1px solid #ccc;}
+		#host_pdt_info .qna_box .qnd_pdt input, .qna_box .qnd_cont label + label {margin-top: 10px;}
+		#host_pdt_info .qna_box .qnd_pdt input {width: 100%; color: #555; border: none; font-size: 24px;}
+		#host_pdt_info .qna_box .qnd_cont {display: flex; flex-direction: column; padding: 20px 0; font-size: 24px;}
+		#host_pdt_info .qna_box .qnd_cont input {width: 400px; border: 1px solid #ccc; padding: 2px 6px; font-size: 18px;}
+		#host_pdt_info .qna_box .qnd_cont textarea {margin-top: 10px; width: 457px; border: 1px solid #ccc; padding: 4px 6px; font-size: 22px;}
+		#host_pdt_info .qna_box .qna_btn-box {text-align: center;}
+		#host_pdt_info .qna_box .qna_btn-box button {padding: 4px 20px; margin: 0 4px; border: 1px solid #ccc; border-radius: 25px; box-shadow: 0px 2px 5px #ccc; font-size: 22px; color: #555; text-align: center;}
+		#host_pdt_info .qna_box .qna_btn-box button:first-child:hover {background-color: #3747C7; color: #fff;}
+		#host_pdt_info .qna_box .qna_btn-box button:last-child:hover {background-color: #ccc; color: #fff;}
+	/* e: host_pdt_info */

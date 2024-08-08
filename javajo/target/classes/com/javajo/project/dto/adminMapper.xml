@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javajo.project.dto.adminMapper">
+	<!-- 공지사항 notice -->
+	<insert id="insertNotice" parameterType="NoticeDTO">
+ 	<!-- insert into javajo_notice values(55, 'sd', 'sdf', 'sdf', sysdate) -->
+ 		insert into javajo_notice values(seq_notice_num.nextval, #{user_id}, #{notice_title}, #{notice_content}, sysdate)
+ 	</insert>
+ 
+ 	<select id="listNotice" parameterType="java.util.Map" resultType="NoticeDTO">
+ 		<!-- select * from javajo_notice order by notice_num desc -->
+ 		select * from (
+ 			select rownum rn, A.*
+ 				from(
+ 					select * from javajo_notice
+ 					order by notice_num desc
+ 				) A
+ 		)
+ 		where rn between #{startRow} and #{endRow}
+ 	</select>
+ 	
+ 	<!-- 페이징 처리를 위한 쿼리문 추가 -->
+ 	<select id="noticeCount" resultType="int">
+ 		select count(*) from javajo_notice
+ 	</select>
+ 	
+ 	<select id="getNoticeByNum" parameterType="int" resultType="NoticeDTO">
+ 		select * from javajo_notice where notice_num = #{notice_num}		
+ 	</select>
+ 	
+ 	<update id="updateNotice" parameterType="noticeDTO">
+ 		update javajo_notice set notice_title=#{notice_title}, notice_content = #{notice_content} where notice_num = #{notice_num} 
+ 	</update>
+ 	
+ 	<delete id="deleteNotice">
+ 		delete from javajo_notice where notice_num = #{notice_num}
+ 	</delete>
+
+	<select id="listAdminQna" parameterType="java.util.Map"
+		resultType="AdminQnaDTO">
+
+		<!-- select * from javajo_adminqna order by adminqna_num desc -->
+
+		select * from(
+		select rownum rn, A.*
+		from(
+		select * from javajo_adminqna
+		order by adminqna_num desc
+		)A
+		)
+		where rn between #{startRow} and #{endRow}
+
+	</select>
+
+
+	<select id="adminQnaCount" resultType="int">
+		select count(*) from
+		javajo_adminqna
+	</select>
+
+	<select id="getAdminQnaByNum" parameterType="int"
+		resultType="AdminQnaDTO">
+		select * from javajo_adminqna where adminqna_num =
+		#{adminqna_num}
+	</select>
+
+	<update id="updateAdminQna" parameterType="AdminQnaDTO">
+		update javajo_adminqna
+		set adminqna_acontent = #{adminqna_acontent},
+		adminqna_status=#{adminqna_status} where adminqna_num =
+		#{adminqna_num}
+	</update>
+
+	<update id="deleteAdminAnswer" parameterType="int">
+		UPDATE
+		JAVAJO_ADMINQNA SET ADMINQNA_ACONTENT = '', ADMINQNA_STATUS = '답변대기'
+		where adminqna_num = #{adminqna_num}
+	</update>
+
+
+	<!-- 어드민 - 고객문의 등록 (파일 첨부) -->
+	<insert id="insertAdminQnaFile" parameterType="AdminQnaDTO">
+		insert into
+		javajo_adminqna values (seq_adminqna_num.nextval, sysdate,
+		#{adminqna_type}, #{adminqna_title}, #{user_id}, #{adminqna_image},
+		#{adminqna_gcontent}, '', #{adminqna_status})
+	</insert>
+
+	<insert id="insertAdminQnaNFFile" parameterType="AdminQnaDTO">
+		insert into
+		javajo_adminqna values (seq_adminqna_num.nextval, sysdate,
+		#{adminqna_type}, #{adminqna_title}, #{user_id}, '',
+		#{adminqna_gcontent}, '', #{adminqna_status})
+	</insert>
+
+	<!-- 어드민_정산관리 -->
+	<select id="listAccount" parameterType="java.util.Map" resultType="ReservDTO">
+		select * from (
+			select rownum rn, A.*
+			from (
+				select *
+				from javajo_reserv
+				where reserv_status != '예약취소' and reserv_checkout &lt; sysdate
+				AND (EXTRACT(YEAR FROM reserv_checkout) = #{searchYear})
+				order by reserv_checkout desc
+			) A
+		) where rn between #{startRow} and #{endRow}		
+	</select>
+
+	<!-- adminAccount 페이징 처리를 위한 count 쿼리문 -->
+	<select id="adminAccount" parameterType="java.util.Map" resultType="int">
+		select count(*) from (
+			select * from javajo_reserv
+			where reserv_status != '예약취소' and reserv_checkout &lt; sysdate
+			AND (EXTRACT(YEAR FROM reserv_checkout) = #{searchYear})
+			order by reserv_checkout desc
+		) 
+	</select>
+	
+	<!-- 기간별 조회 -->
+ 	<select id="periodAccount" parameterType="java.util.Map" resultType="ReservDTO">
+	 		select *
+				from (
+				    select rownum rn, A.*
+				    from (
+				        select *
+				        from javajo_reserv
+				        where reserv_status != '예약취소' 
+				          and reserv_checkout &lt; sysdate
+				          and reserv_checkout &gt;= TO_DATE(#{startDay}, 'YYYY-MM-DD')
+				          and reserv_checkout &lt;= TO_DATE(#{endDay}, 'YYYY-MM-DD')
+				        order by reserv_checkout desc
+				    ) A
+				) where rn between #{startRow} and #{endRow}
+ 	</select>
+ 	
+ 	<select id="monthAccount" parameterType="String" resultType="ReservDTO">
+			 SELECT
+		        TO_CHAR(reserv_date, 'YYYY-MM') AS reserv_month,
+		        SUM(reserv_pay) AS totalReservPay,
+		        SUM(reserv_paycharge) AS totalReservPaycharge
+		    FROM
+		        javajo_reserv
+		    WHERE
+		        reserv_status != '예약취소'
+		        AND reserv_checkout &lt; SYSDATE
+		        AND TO_CHAR(reserv_checkout, 'YYYY') = #{searchYear}
+		    GROUP BY
+		        TO_CHAR(reserv_date, 'YYYY-MM')
+		    ORDER BY
+		        reserv_month DESC
+	</select>
+	
+	
+	<!-- 기간별 페이징 처리를 위한 쿼리문 -->
+	<select id="periodCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from (
+			select * from javajo_reserv
+				        where reserv_status != '예약취소' 
+				          and reserv_checkout &lt; sysdate
+				          and reserv_checkout &gt;= TO_DATE(#{startDay}, 'YYYY-MM-DD')
+				          and reserv_checkout &lt;= TO_DATE(#{endDay}, 'YYYY-MM-DD')
+				        order by reserv_checkout desc
+		)
+		
+	</select>
+	
+	<!-- period 기간별) 총 수수료 합계를 계산한 쿼리문  -->
+  	<select id="totPaycharge" parameterType="java.util.Map" resultType="int">
+  		select NVL(SUM(reserv_paycharge), 0) as totPaycharge
+		from javajo_reserv
+		where reserv_status!= '예약취소'
+		and reserv_checkout &gt;= TO_DATE(#{startDay},'yyyy-mm-dd')
+		and reserv_checkout &lt;= TO_DATE(#{endDay},'yyyy-mm-dd')
+		and reserv_checkout &lt; sysdate
+	</select>
+	
+	<!-- year 연도별) 총 수수료 합계를 계산한 쿼리문  -->
+	<select id="totPaychargeYear" parameterType="java.util.Map" resultType="int">
+			SELECT NVL(SUM(reserv_paycharge), 0) AS totPaycharge
+			FROM javajo_reserv
+			WHERE reserv_status != '예약취소'
+			  AND EXTRACT(YEAR FROM reserv_checkout) = #{searchYear}
+			  and reserv_checkout &lt; sysdate
+	</select>
+	
+	<!-- month 월별) 총 수수료 합계를 계산한 쿼리문 -->
+	<select id="totPaychargeMonth" parameterType="String" resultType="int">
+	    SELECT NVL(SUM(reserv_paycharge), 0) AS totPaycharge
+	    FROM javajo_reserv
+	    WHERE reserv_status != '예약취소'
+	      AND TO_CHAR(reserv_checkout, 'YYYY') = #{searchYear}
+	</select>
+
+</mapper>
+ 

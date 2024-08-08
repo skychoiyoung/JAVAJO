@@ -1,0 +1,167 @@
+	/* s: main */
+	@charset "UTF-8";
+	/* s: admin_top */
+		tbody tr a:hover, .pagination .p_active, .pagination a:hover, .footer a:hover {color: #38B341;}
+		.pagination .p_active::after {background: #38B341;}
+		.pagination .page_btn img:hover {filter: invert(59%) sepia(22%) saturate(1419%) hue-rotate(74deg) brightness(94%) contrast(86%);}
+		
+		#admin_top {max-width: 1920px; height: 140px; margin: 0 auto; box-shadow: 0px 0px 5px #ccc;}
+		#admin_top .inner_admin_top {width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 100%;}
+		#admin_top .inner_admin_top .logo_box img {width: 180px;}
+		
+		#admin_top .inner_admin_top .admin_link {display: flex; gap: 50px; font-size: 26px;}
+		#admin_top .inner_admin_top .admin_link li {border-bottom: 1px solid transparent;}
+		#admin_top .inner_admin_top .admin_link li:hover {border-bottom: 1px solid #38B341; color: #38B341;}
+		
+		#admin_top .inner_admin_top .admin_logout {display: flex;}
+		#admin_top .inner_admin_top .admin_logout .user_box {display: flex; align-items: center;}
+		#admin_top .inner_admin_top .admin_logout .user_box img {width: 18px; height: 18px;}
+		#admin_top .inner_admin_top .admin_logout .user_box p {margin-left: 6px; font-size: 22px;}
+		#admin_top .inner_admin_top .admin_logout .user_box p span {font-size: 24px;}
+		#admin_top .inner_admin_top .admin_logout button {margin-left: 20px; position: relative; font-size: 22px;}
+		#admin_top .inner_admin_top .admin_logout button::after {content: ''; position: absolute; left: 0; bottom: 0; display: block; width: 42px; height: 1px; background: #000;}
+		#admin_top .inner_admin_top .admin_logout button:hover {color: #38B341;}
+		#admin_top .inner_admin_top .admin_logout button:hover::after {background: #38B341;}
+	/* e: admin_top */
+	
+	/* s: admin_user */
+		#admin_user .notice_wrap .noti_tit-box{padding: 30px 0; border-bottom: 1px solid #ccc;}
+		#admin_user .notice_wrap .noti_tit-box .noti_tit {font-size: 32px;}
+		#admin_user .notice_wrap .noti_search {width: 1000px; margin: 30px auto 0; display: flex; justify-content:center; align-items: center; text-align: center;}
+		#admin_user .notice_wrap .noti_search select {height: 28px; line-height: 28px; padding: 0 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 24px;}
+		#admin_user .notice_wrap .noti_search input[name="searchString"] {border: 1px solid #ccc; border-radius: 4px; margin: 0 8px; padding: 0 6px; font-size: 24px;}
+		#admin_user .notice_wrap .noti_search label[for="userEnable"] {margin-right: 8px; font-size: 18px;}
+		#admin_user .notice_wrap .noti_search input:last-child {padding: 1px 20px; border-radius: 4px; background: #38B341; border: none; font-size: 24px; color: #fff;}
+		#admin_user .notice_wrap .noti_list {width: 1000px; margin: 30px auto 0;}
+		#admin_user .notice_wrap .noti_list .noti_enable {height: 36px; display: flex; justify-content:center; align-items: center;}
+		#admin_user .notice_wrap .noti_list .noti_enable img {width: 24px; height: 24px;}
+	/* e: admin_user */
+
+	/* s: admin_notice */
+	    #admin_notice .notice_wrap .noti_tit-box {padding: 30px 0; display: flex; justify-content: space-between; border-bottom: 1px solid #ccc;}
+	    #admin_notice .notice_wrap .noti_tit-box .noti_tit {font-size: 32px;}
+	    #admin_notice .notice_wrap .noti_tit-box .noti_btn {position: relative; display: inline-flex; justify-content: center; align-items: center; font-size: 22px;}
+	    #admin_notice .notice_wrap .noti_tit-box .noti_btn::after {content: ''; position: absolute; left: 0; bottom: 0; display: block; width: 41px; height: 1px; background: #000;}
+	    #admin_notice .notice_wrap .noti_tit-box .noti_btn:hover {color: #38B341;}
+	    #admin_notice .notice_wrap .noti_tit-box .noti_btn:hover::after {background: #38B341;}
+	    #admin_notice .notice_wrap .noti_list {width: 1000px; margin: 30px auto 0;}
+	    #admin_notice .notice_wrap .noti_list .edit_btn {display: flex; justify-content: center; align-items: center; gap: 4px;}
+	    #admin_notice .notice_wrap .noti_list .edit_btn:hover {color: #000; filter: invert(59%) sepia(22%) saturate(1419%) hue-rotate(74deg) brightness(94%) contrast(86%);}
+	    #admin_notice .notice_wrap .noti_list .edit_btn img {width: 16px; height: 16px;}
+    /* e: admin_notice */
+    
+    /* s: admin_noticeedit */
+        #admin_noticeedit .notice_wrap .noti_tit-box {padding: 30px 0; border-bottom: 1px solid #ccc;}
+        #admin_noticeedit .notice_wrap .noti_tit-box .noti_tit {font-size: 28px;}
+        #admin_noticeedit {width: 700px; margin: 0 auto; padding: 30px 0;}
+        #admin_noticeedit .insert_wrap {display: flex; flex-wrap: wrap; align-items: center; padding: 30px 0;}
+        #admin_noticeedit .insert_wrap label {font-size: 24px;}
+        #admin_noticeedit .insert_wrap label span {display: inline-block; width: 46px;}
+        #admin_noticeedit .insert_wrap .insert_tit {width: 60%;}
+        #admin_noticeedit .insert_wrap .insert_writer {width: 40%; text-align: center;}
+        #admin_noticeedit .insert_wrap .insert_tit input {width: 340px; border-left:none; border-top: none; border-right: none; border-bottom: 1px solid #ccc;}
+        #admin_noticeedit .insert_wrap .insert_writer input {width: 54px; border: none;}
+        #admin_noticeedit .insert_wrap .insert__cont {margin-top: 10px;}
+        #admin_noticeedit .insert_wrap input {font-size: 24px;}
+        #admin_noticeedit .insert_wrap textarea {margin-top: 10px; width: 700px; height: 200px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; border-left: none; border-right: none; padding: 12px 16px; border-radius: 2px; font-size: 22px;}
+        #admin_noticeedit .button_box {text-align: center;}
+        #admin_noticeedit button {width: 100px; height: 36px; background-color: #ccc; border-radius: 10px; box-shadow: 0px 2px 5px #ccc; font-size: 22px; color: #fff;}
+        #admin_noticeedit button:last-child {margin-left: 16px; background-color: #38B341;}
+    /* e: admin_noticeedit */
+    
+    /* s: admin_noticeadd */
+        #admin_noticeadd .notice_wrap .noti_tit-box {padding: 30px 0; border-bottom: 1px solid #ccc;}
+        #admin_noticeadd .notice_wrap .noti_tit-box .noti_tit {font-size: 32px;}
+        #admin_noticeadd form {width: 700px; margin: 0 auto; padding: 30px 0;}
+        #admin_noticeadd form .insert_wrap {display: flex; flex-wrap: wrap; align-items: center;}
+        #admin_noticeadd form .insert_wrap label {font-size: 24px;}
+        #admin_noticeadd form .insert_wrap label span {display: inline-block; width: 46px;}
+        #admin_noticeadd form .insert_wrap .insert_tit {width: 60%;}
+        #admin_noticeadd form .insert_wrap .insert_writer {width: 40%;}
+        #admin_noticeadd form .insert_wrap .insert_tit input {width: 340px; border-bottom: 1px solid #ccc;}
+        #admin_noticeadd form .insert_wrap .insert_writer input {width: 60px;}
+        #admin_noticeadd form .insert_wrap .insert__cont {margin-top: 16px;}
+        #admin_noticeadd form .insert_wrap input {font-size: 24px; border: none;}
+        #admin_noticeadd form .insert_wrap textarea {margin-top: 20px; width: 700px; height: 200px; border: 1px solid #ccc; border-radius: 2px; padding: 4px 6px; font-size: 22px;}
+        #admin_noticeadd form .button_box {margin-top: 20px; text-align: center;}
+        #admin_noticeadd form button {width: 100px; height: 36px; background-color: #38B341; border-radius: 10px; box-shadow: 0px 2px 5px #ccc; font-size: 22px; color: #fff;}
+        #admin_noticeadd form button:last-child {margin-left: 16px; background-color: #ccc;}
+    /* e: admin_noticeadd */
+	
+	
+    /* s: admin_custom */
+        #admin_custom .notice_wrap .noti_tit-box {padding: 30px 0; border-bottom: 1px solid #ccc;}
+        #admin_custom .notice_wrap .noti_tit-box .noti_tit {font-size: 32px;}
+        #admin_custom .notice_wrap .noti_list {width: 1000px; margin: 30px auto 0;}
+     /* e: admin_custom */
+     
+     /* s: admin_custome_noti */
+	    #admin_custome_noti .notice_wrap .noti_tit-box {padding: 30px 0; border-bottom: 1px solid #ccc;}
+	    #admin_custome_noti .notice_wrap .noti_tit-box .noti_tit {font-size: 32px;}
+	
+	   #admin_custome_noti .question_box {width: 700px; margin: 0 auto; padding: 30px 0;}
+		#admin_custome_noti .question_box .question_wrap {display: flex; flex-wrap: wrap;}
+		#admin_custome_noti .question_box .question_wrap label {font-size: 24px;}
+		#admin_custome_noti .question_box .question_wrap label:first-child {width: 100%;}
+		#admin_custome_noti .question_box .question_wrap label:not(:first-child) {width: 33%;}
+		#admin_custome_noti .question_box .question_wrap label:first-child input {margin-left: 10px; width: 600px;}
+		#admin_custome_noti .question_box .question_wrap label:not(:first-child) input {margin-left: 10px; width: 110px;}
+		
+		#admin_custome_noti .question_box .question_wrap label span {position: relative; display: inline-block; width: 62px;}
+		#admin_custome_noti .question_box .question_wrap label span::after {content: ''; position: absolute; top: 50%; transform: translateY(-50%); right: 0; display: block; width: 1px; height: 14px; background: #ccc;}
+		#admin_custome_noti .question_box .question_wrap label input {font-size: 24px; border: none;}
+		#admin_custome_noti .question_box .question_wrap label + label {margin-top: 14px;}
+		#admin_custome_noti .question_box .question_wrap .qna_img_box {margin-top: 14px; width: 100%; display: flex; justify-content: space-between;}
+		#admin_custome_noti .question_box .question_wrap .question_cont {width: 400px}
+		#admin_custome_noti .question_box .question_wrap .question_cont textarea {margin-top: 20px; height: 200px; border: 1px solid #ccc; border-radius: 2px; padding: 4px 6px; font-size: 22px;}
+		#admin_custome_noti .question_box .question_wrap .question_img {width: 270px;}
+		#admin_custome_noti .question_box .question_wrap .question_img p {font-size: 24px;}
+		#admin_custome_noti .question_box .question_wrap .question_img img {margin-top: 20px; width: 270px; height: 210px;}
+	    
+	    #admin_custome_noti .answer_box {width: 700px; margin: 0 auto; padding: 30px 0; border-top: 1px solid #ccc;}
+		#admin_custome_noti .answer_box .answer_wrap {display: flex; flex-wrap: wrap; align-items: center;}
+		#admin_custome_noti .answer_box .answer_wrap label {font-size: 24px;}
+		#admin_custome_noti .answer_box .answer_wrap .answer_type {width: 100%; margin-bottom: 10px;}
+		#admin_custome_noti .answer_box .answer_wrap .answer_type input {margin-left: 16px; width: 120px; font-size: 22px;}
+		#admin_custome_noti .answer_box .answer_wrap .answer_tit  {width: 60%;}
+		#admin_custome_noti .answer_box .answer_wrap .answer_tit input {width: 340px;}
+		#admin_custome_noti .answer_box .answer_wrap .answer_writer {width: 40%;}
+		#admin_custome_noti .answer_box .answer_wrap .answer_writer input {width: 100px;}
+		#admin_custome_noti .answer_box .answer_wrap .answer_cont {width:100%;}
+		#admin_custome_noti .answer_box .answer_wrap input {margin-left: 16px; padding: 0 6px; font-size: 22px;}
+		#admin_custome_noti .answer_box .answer_wrap textarea {margin-top: 20px; width: 100%; height: 200px; border: 1px solid #ccc; padding: 4px 6px; font-size: 22px;}
+	    
+	    #admin_custome_noti .answer_box .button_box {margin-top: 20px; text-align: center;}
+	    #admin_custome_noti .answer_box button {width: 100px; height: 36px; background-color: #ccc; border-radius: 10px; box-shadow: 0px 2px 5px #ccc; font-size: 22px; color: #fff;}
+	    #admin_custome_noti .answer_box button:last-child {margin-left: 16px; background-color: #38B341;}
+	 /* e: admin_custome_noti */
+     
+ 	 /* s: admin_account */
+        #admin_account .account_wrap .acct_tit-box {padding: 30px 0; border-bottom: 1px solid #ccc;}
+        #admin_account .account_wrap .acct_tit-box .acct_tit {font-size: 32px;}
+        
+        #admin_account .account_wrap .account_box {margin: 20px 0; text-align: right;}
+        #admin_account .account_wrap .account_box p {font-size: 28px; color: #555;}
+        #admin_account .account_wrap .account_box p span {display: inline-block; width: 100px; margin-left: 16px; font-size: 28px; text-align: right;}
+        #admin_account .account_wrap .account_box select {padding: 0 12px; border-radius: 4px; font-size: 24px; text-align: center;}
+        
+        #admin_account .account_wrap .account_inner_wrap {width: 1000px; margin: 0 auto;}
+        #admin_account .account_wrap .search_box {display: flex; justify-content: space-between; align-items: center;}
+        #admin_account .account_wrap .search_box form {display: flex; align-items: center;}
+        #admin_account .account_wrap .search_box form .period_tit {width: 50px; font-size: 26px; color: #555;}
+        #admin_account .account_wrap .search_box form .year_box {display: flex; align-items: center; gap: 14px;}
+        #admin_account .account_wrap .search_box form .year_box img {width: 18px; height: 18px;}
+        #admin_account .account_wrap .search_box form .year_box img:hover {cursor: pointer;}
+        #admin_account .account_wrap .search_box form .year_box input {width: 50px; height: 28px; line-height: 28px; font-size: 28px; color: #555; text-align: center; border: none;}
+        #admin_account .account_wrap .search_box form .year_box .month_value {width: 30px;}
+        #admin_account .account_wrap .search_box .totAccount_box {font-size: 34px; color: #555;}
+        #admin_account .account_wrap .search_box .totAccount_box span {margin-right: 4px; display: inline-block; width: 100px; text-align: right;}
+
+
+        #admin_account .account_wrap .search_box form .period_box {display: flex; align-items: center;}
+        #admin_account .account_wrap .search_box form .period_box input {margin: 0 14px; font-size: 24px; color: #555; text-align: center;}
+        #admin_account .account_wrap .search_box form .period_box input:last-child {margin: 0 0 0 14px;}
+        #admin_account .account_wrap .search_box form button {margin-left: 14px; display: inline-flex; justify-content: center; align-items: center; padding: 1px 20px; border-radius: 4px; background-color: #38B341; box-shadow: 2px 3px 5px #ccc; color: #fff; font-size: 24px;}
+        
+        #admin_account .account_wrap .acct_list {margin: 30px auto;}
+     /* e: admin_account */

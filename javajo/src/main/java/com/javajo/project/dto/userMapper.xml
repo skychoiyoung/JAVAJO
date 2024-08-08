@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javajo.project.dto.userMapper">
+
+	<!-- User -->
+	<select id="checkId" resultType="int" parameterType="String">
+		select count(*) from javajo_user where user_id = #{id}
+	</select>
+	
+	<select id="findUserById" parameterType="String" resultType="userDTO">
+		select * from javajo_user where user_id = #{id}
+	</select>
+	
+	<select id="findUserBySid" parameterType="String" resultType="userDTO">
+		select * from javajo_user where user_sid = #{sid}
+	</select>
+	
+	<select id="findUserByEmail" parameterType="java.util.Map"
+		resultType="userDTO">
+		select * from javajo_user where user_email1=#{user_email1} and user_email2=#{user_email2}
+		<if test="user_id != null">
+			and user_id=#{user_id}
+		</if>
+	</select>
+	
+	<select id="findUserBySocial" parameterType="java.util.Map" resultType="userDTO">
+		select * from javajo_user where user_email1=#{user_email1}
+		and user_email2=#{user_email2} and user_loginType=#{user_loginType}
+	</select>
+	
+	<select id="checkRemainsHouse" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM javajo_house WHERE user_id = #{user_id}
+	</select>
+	
+	<select id="checkRemainsGuest" parameterType="String" resultType="int">
+		SELECT COUNT(*) 
+        FROM javajo_reserv 
+        WHERE user_id = #{user_id} 
+        AND (RESERV_STATUS = '이용중' OR RESERV_STATUS = '예약완료' OR RESERV_STATUS = '결제완료')
+	</select>
+
+	<insert id="insertUser" parameterType="userDTO">
+		insert into javajo_user (user_id, user_sid, user_passwd, user_name, user_hp1, user_hp2, user_hp3, user_email1, user_email2, user_loginType, user_joindate, user_enable)
+		values(#{user_id},
+		<if test="user_sid != null">
+            #{user_sid}
+        </if>
+        <if test="user_sid == null">
+            NULL
+        </if>,#{user_passwd},#{user_name},#{user_hp1},#{user_hp2},#{user_hp3},#{user_email1},#{user_email2},#{user_loginType},sysdate,'Y')
+	</insert>
+
+	<update id="updateUser" parameterType="userDTO">
+		update javajo_user set
+		user_name=#{user_name}, user_hp1=#{user_hp1}, user_hp2=#{user_hp2},
+		user_hp3=#{user_hp3},
+		user_passwd = CASE
+		WHEN user_passwd != #{user_passwd} THEN #{user_passwd}
+		ELSE user_passwd
+		END,
+		user_email1 = CASE
+		WHEN user_email1 != #{user_email1} THEN #{user_email1}
+		ELSE user_email1
+		END,
+		user_email2 = CASE
+		WHEN user_email1 != #{user_email1} THEN #{user_email2}
+		ELSE user_email2
+		END
+		where user_id=#{user_id}
+	</update>
+
+	<update id="enableUser" parameterType="java.util.Map">
+		update javajo_user set user_enable='N', user_email1='empty', user_email2='empty' where user_id = #{id} and user_loginType = #{type}
+	</update>
+	
+	<update id="enableChangeY" parameterType="java.util.Map">
+		update javajo_user set user_enable='Y', user_email1=#{user_email1}, user_email2=#{user_email2} where user_sid = #{user_sid}
+	</update>
+	
+	<update id="socailJoinCheck" parameterType="java.util.Map">
+		update javajo_user set user_loginType=#{user_loginType}, user_sid=#{user_sid} where user_email1=#{user_email1} and user_email2=#{user_email2}
+	</update>
+	
+	<!-- 어드민 -->
+	<select id="listAllUser" parameterType="java.util.Map" resultType="userDTO">
+		 select * from(
+			select rownum rn, A.*
+				from (
+					select * from javajo_user
+					order by user_joindate desc
+				) A
+		)
+		where rn between #{startRow} and #{endRow} 
+		and user_enable = 'Y' 
+	</select>
+	
+	<select id="getUserCount" resultType="int">
+		select count(*) from javajo_user
+	</select>
+	
+	<!-- userList 아이디/유형별 조회--> 
+	<select id="findUserType" parameterType="java.util.Map" resultType="UserDTO">
+		  select * from(
+			select rownum rn, A.*
+				from(
+					select * from javajo_user
+					<choose>
+						<when test="search == 'user_id'">
+							WHERE USER_ID LIKE '%' || #{searchString} || '%'
+						</when>					
+						<when test="search == 'user_loginType'">
+							WHERE USER_LOGINTYPE = #{searchString}
+						</when>
+					</choose>
+					<choose>
+						<when test="userEnable == null">
+					        and user_enable = 'Y'
+					    </when>
+					</choose>
+					order by user_joindate desc
+				)A	
+			)
+			where rn between #{startRow} and #{endRow}		
+	</select>
+	
+	<select id="getSearchCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from(
+			select rownum rn, A.*
+				from(
+					select * from javajo_user
+					<choose>
+						<when test="search == 'user_id'">
+							WHERE USER_ID LIKE '%' || #{searchString} || '%'
+						</when>					
+						<when test="search == 'user_loginType'">
+							WHERE USER_LOGINTYPE = #{searchString}
+						</when>
+					</choose>
+					order by user_joindate desc
+				)A	
+			)
+	</select>
+	
+	<delete id="deleteUser" parameterType="String">
+		delete from javajo_user where user_id=#{user_id}
+	</delete>
+
+</mapper>
+ 
